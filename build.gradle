@@ -7,6 +7,14 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
     }
+
+}
+
+// To inline function compatibility
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'
@@ -38,6 +46,9 @@ dependencies {
     implementation "io.ktor:ktor-auth:$ktor_version"
     implementation "io.ktor:ktor-auth-jwt:$ktor_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+
+    // -----
+    implementation 'org.litote.kmongo:kmongo:4.1.2'
 }
 
 shadowJar {
