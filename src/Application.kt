@@ -1,7 +1,6 @@
 package dev.remylavergne.spotfinder
 
-import dev.remylavergne.spotfinder.data.Database
-import dev.remylavergne.spotfinder.data.SpotfinderCollections
+import dev.remylavergne.spotfinder.data.DatabaseProvider
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
@@ -17,7 +16,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     installPlugins(this)
-    Database.initialize(this)
+    DatabaseProvider.initialize(this)
 
     routing {
         get("/") {
