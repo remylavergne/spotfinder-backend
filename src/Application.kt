@@ -1,7 +1,6 @@
 package dev.remylavergne.spotfinder
 
 import dev.remylavergne.spotfinder.controllers.picturesController
-import dev.remylavergne.spotfinder.controllers.routingTest
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.injection.mainModule
 import io.ktor.application.*
@@ -12,10 +11,12 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.*
-import io.ktor.utils.io.errors.*
 import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
 import java.io.File
+
+// TODO: Get and check environment variable at startup
+
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -32,7 +33,7 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
-        picturesController()
+        picturesController(uploadDir)
 
         authenticate("myBasicAuth") {
             get("/protected/route/basic") {
