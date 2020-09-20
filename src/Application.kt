@@ -3,6 +3,7 @@ package dev.remylavergne.spotfinder
 import dev.remylavergne.spotfinder.controllers.picturesController
 import dev.remylavergne.spotfinder.controllers.routingTest
 import dev.remylavergne.spotfinder.data.DatabaseProvider
+import dev.remylavergne.spotfinder.injection.mainModule
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
@@ -12,6 +13,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.*
 import io.ktor.utils.io.errors.*
+import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
 import java.io.File
 
@@ -43,6 +45,10 @@ fun Application.module(testing: Boolean = false) {
 }
 
 fun installPlugins(app: Application) {
+    app.install(Koin) {
+        modules(mainModule)
+    }
+
     app.install(Compression) {
         gzip {
             priority = 1.0
