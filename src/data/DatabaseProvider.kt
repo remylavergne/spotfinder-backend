@@ -30,15 +30,9 @@ object DatabaseProvider {
         try {
             client = KMongo.createClient("mongodb://$username:$password@$hostname:$port")
             database = client.getDatabase(databaseName)
-            // val collection = database.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
-            // collection.insertOne(Spot(UUID.randomUUID().toString(), "TNS", "France"))
         } catch (e: Exception) {
             throw e
         }
         return this
     }
 }
-
-// Example
-@Serializable
-data class Spot(val id: String, val name: String, val country: String)
