@@ -2,16 +2,17 @@ package dev.remylavergne.spotfinder.data
 
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoDatabase
-import io.ktor.application.*
-import io.ktor.util.*
-import kotlinx.serialization.Serializable
+import io.ktor.application.Application
+import io.ktor.util.KtorExperimentalAPI
 import org.litote.kmongo.KMongo
 
 @KtorExperimentalAPI
-object DatabaseProvider {
+object DatabaseProvider { // TODO: Refaire le database provider en injection
 
-    private lateinit var client: MongoClient
-    private lateinit var database: MongoDatabase
+    lateinit var client: MongoClient
+        private set
+    lateinit var database: MongoDatabase
+        private set
 
     @Throws(Exception::class)
     fun initialize(application: Application): DatabaseProvider {

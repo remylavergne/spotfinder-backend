@@ -12,11 +12,12 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : Pictur
         val partData = mutableListOf<PartData>()
         // Extract all parts
         data.forEachPart { part: PartData -> partData.add(part) }
-        // Get SpotId
+        // Check if all parts needed are available
         val spotIdPart = partData.find { it is PartData.FormItem } ?: return "Error spotId missing"
         val picturePart = partData.find { it is PartData.FileItem } ?: return "Error picture missing"
         // Create and Backup picture
-        picturesRepo.savePictureLocally(spotIdPart, picturePart)
+        picturesRepo.savePictureAsFile(spotIdPart, picturePart)?.let { picturesRepo.persistPicture(it) }
+            ?: return "ERROR"
 
         return "OK" // TODO: Change this
     }
