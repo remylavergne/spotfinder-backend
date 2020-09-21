@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder
 
+import dev.remylavergne.spotfinder.controllers.picturesController
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.injection.mainModule
 import io.ktor.application.*
@@ -12,6 +13,10 @@ import io.ktor.routing.*
 import io.ktor.util.*
 import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
+import java.io.File
+
+// TODO: Get and check environment variable at startup
+
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -21,11 +26,14 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
     installPlugins(this)
     DatabaseProvider.initialize(this)
+    val uploadDir = getUploadDir(environment)
 
     routing {
         get("/") {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
+
+        picturesController(uploadDir)
 
         authenticate("myBasicAuth") {
             get("/protected/route/basic") {
@@ -34,6 +42,7 @@ fun Application.module(testing: Boolean = false) {
             }
         }
     }
+
 }
 
 fun installPlugins(app: Application) {
@@ -73,4 +82,23 @@ fun installPlugins(app: Application) {
         // serialization()
     }
 }
+
+/**
+ * Create a directory for uploads
+ * Configuration located in application.conf
+ */
+@KtorExperimentalAPI
+fun getUploadDir(environment: ApplicationEnvironment): File {
+    val picturesConfig = environment.config.config("pictures")
+
+    val uploadDirPath: String = picturesConfig.property("upload.dir").getString()
+    val uploadDir = File(uploadDirPath)
+
+    if (!uploadDir.exists()) {
+        uploadDir.mkdirs()
+    }
+
+    return uploadDir
+}
+
 
