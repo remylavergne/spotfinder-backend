@@ -18,6 +18,7 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
         try {
             val ext = File((picturePart as PartData.FileItem).originalFileName ?: "no_name").extension
 
+            // TODO: Create a specific folder by Spot "/pictures/<spotId>/"
             val picture = File(
                 "pictures", // TODO: Get global upload dir here
                 "$spotId-${picturePart.originalFileName}-${System.currentTimeMillis()}.$ext"
