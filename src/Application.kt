@@ -1,11 +1,17 @@
 package dev.remylavergne.spotfinder
 
 import dev.remylavergne.spotfinder.controllers.picturesController
+import dev.remylavergne.spotfinder.controllers.spotsController
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.injection.mainModule
-import io.ktor.application.*
+import dev.remylavergne.spotfinder.injection.toolsModule
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.application.ApplicationEnvironment
 import io.ktor.auth.*
 import io.ktor.features.*
+import io.ktor.gson.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -14,9 +20,9 @@ import io.ktor.util.*
 import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
 import java.io.File
+import java.text.DateFormat
 
 // TODO: Get and check environment variable at startup
-
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -33,6 +39,7 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
+        spotsController()
         picturesController(uploadDir)
 
         authenticate("myBasicAuth") {
@@ -47,7 +54,7 @@ fun Application.module(testing: Boolean = false) {
 
 fun installPlugins(app: Application) {
     app.install(Koin) {
-        modules(mainModule)
+        modules(mainModule, toolsModule)
     }
 
     app.install(Compression) {
@@ -79,7 +86,10 @@ fun installPlugins(app: Application) {
     }
 
     app.install(ContentNegotiation) {
-        // serialization()
+        gson {
+            setDateFormat(DateFormat.LONG)
+            setPrettyPrinting()
+        }
     }
 }
 
