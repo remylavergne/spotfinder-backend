@@ -1,7 +1,6 @@
 package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
-import dev.remylavergne.spotfinder.services.PicturesService
 import dev.remylavergne.spotfinder.services.SpotsService
 import dev.remylavergne.spotfinder.utils.getResponseObject
 import io.ktor.application.*
