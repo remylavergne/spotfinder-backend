@@ -11,7 +11,6 @@ import io.ktor.application.install
 import io.ktor.application.ApplicationEnvironment
 import io.ktor.auth.*
 import io.ktor.features.*
-import io.ktor.gson.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -20,7 +19,6 @@ import io.ktor.util.*
 import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
 import java.io.File
-import java.text.DateFormat
 
 // TODO: Get and check environment variable at startup
 
@@ -49,7 +47,6 @@ fun Application.module(testing: Boolean = false) {
             }
         }
     }
-
 }
 
 fun installPlugins(app: Application) {
@@ -86,10 +83,6 @@ fun installPlugins(app: Application) {
     }
 
     app.install(ContentNegotiation) {
-        gson {
-            setDateFormat(DateFormat.LONG)
-            setPrettyPrinting()
-        }
     }
 }
 
@@ -110,5 +103,3 @@ fun getUploadDir(environment: ApplicationEnvironment): File {
 
     return uploadDir
 }
-
-
