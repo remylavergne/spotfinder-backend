@@ -9,5 +9,6 @@ data class Picture(
     val createdAt: Long = System.currentTimeMillis(),
     val filename: String,
     val spotId: String,
-    val createdBy: String // TODO: Unique ID by phone / user
+    val createdBy: String, // TODO: Unique ID by phone / user
+    val allowed: Boolean = false
 )
