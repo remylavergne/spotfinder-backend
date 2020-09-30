@@ -1,5 +1,5 @@
 build:
-  maxIssues: 0
+  maxIssues: 200
   excludeCorrectable: false
   weights:
   # complexity: 2
@@ -507,8 +507,8 @@ potential-bugs:
 
 style:
   active: true
-  ClassOrdering:
-    active: false
+  #ClassOrdering:
+    #active: false
   CollapsibleIfStatements:
     active: false
   DataClassContainsFunctions:

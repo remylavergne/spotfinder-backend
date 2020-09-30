@@ -44,9 +44,13 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
         val spotId = infos[0]
         // val riderId = infos[1]
         // TODO: Récupérer l'identifiant dans le path
-        val newPicture: Picture =
-            Picture(filename = filename, createdBy = UUID.randomUUID().toString(), spotId = spotId)
+        val newPicture = Picture(filename = filename, createdBy = UUID.randomUUID().toString(), spotId = spotId)
 
         databaseHelper.persistPicture(newPicture)
+    }
+
+    override fun getPicturesBySpotId(id: String): List<Picture> {
+        val pictures = databaseHelper.getPicturesBySpotId(id)
+        return pictures
     }
 }
