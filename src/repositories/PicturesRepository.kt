@@ -5,7 +5,7 @@ import io.ktor.http.content.PartData
 import java.io.File
 
 interface PicturesRepository {
-    fun savePictureAsFile(spotIdPart: PartData, picturePart: PartData): File?
+    fun savePictureAsFile(parts: List<PartData>): File?
     fun persistPicture(picture: File)
     fun getPicturesBySpotId(id: String): List<Picture>
 }

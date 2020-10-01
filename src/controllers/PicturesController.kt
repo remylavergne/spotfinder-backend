@@ -1,28 +1,32 @@
 package dev.remylavergne.spotfinder.controllers
 
-import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.services.PicturesService
-import dev.remylavergne.spotfinder.utils.MoshiHelper
-import dev.remylavergne.spotfinder.utils.toJson
 import io.ktor.application.call
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.ContentType
+import io.ktor.http.content.*
 import io.ktor.request.receiveMultipart
 import io.ktor.response.*
 import io.ktor.routing.Route
 import io.ktor.routing.post
 import io.ktor.routing.get
 import org.koin.ktor.ext.get
-import org.litote.kmongo.json
 import java.io.File
-import java.util.*
 
-fun Route.picturesController(uploadDir: File) {
+fun Route.picturesController() {
 
     val pictureService: PicturesService = get()
 
+    static("/pictures") {
+        /*files("css")
+        default("index.html")*/
+        resources("pictures")
+    }
+
     post("/upload/picture") {
-        val response = pictureService.savePicture(call.receiveMultipart())
-        call.respondText(text = response, status = HttpStatusCode.OK, contentType = ContentType.Text.Plain)
+        pictureService.savePicture(call.receiveMultipart()).let { response ->
+            call.respondText(text = response, status = HttpStatusCode.OK, contentType = ContentType.Text.Plain)
+        }
     }
 
     get("/pictures/spot/{id}") {
@@ -40,4 +44,13 @@ fun Route.picturesController(uploadDir: File) {
             contentType = ContentType.Text.Plain
         )
     }
+
+    /**
+     * Expose Pictures Static Content
+     */
+    /*post("/picture/id/{path}") {
+        val path = call.parameters["path"]
+        val picture = File("pictures/$path")
+        call.respondFile(picture)
+    }*/
 }
