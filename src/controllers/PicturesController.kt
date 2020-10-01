@@ -48,9 +48,13 @@ fun Route.picturesController() {
     /**
      * Expose Pictures Static Content
      */
-    /*post("/picture/id/{path}") {
-        val path = call.parameters["path"]
-        val picture = File("pictures/$path")
-        call.respondFile(picture)
-    }*/
+    get("/picture/id/{pictureId}/") {
+        pictureService.getStaticContentPicture(call)?.let { file: File ->
+            call.respondFile(file)
+        } ?: call.respondText(
+            text = "Error, picture not found",
+            status = HttpStatusCode.NotFound,
+            contentType = ContentType.Text.Plain
+        )
+    }
 }

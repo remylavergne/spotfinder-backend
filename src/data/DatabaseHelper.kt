@@ -7,4 +7,5 @@ interface DatabaseHelper {
     fun persistPicture(picture: Picture)
     fun persistSpot(spot: Spot): Boolean
     fun getPicturesBySpotId(id: String): List<Picture>
+    fun getPictureById(id: String): Picture?
 }

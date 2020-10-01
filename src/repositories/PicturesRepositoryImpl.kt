@@ -71,4 +71,10 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
         val pictures = databaseHelper.getPicturesBySpotId(id)
         return pictures
     }
+
+    override fun getStaticPictureFile(pictureId: String): File? {
+        return databaseHelper.getPictureById(pictureId)?.let {
+            return File(it.path)
+        }
+    }
 }
