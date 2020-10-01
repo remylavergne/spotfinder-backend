@@ -8,4 +8,5 @@ interface PicturesRepository {
     fun savePictureAsFile(parts: List<PartData>): File?
     fun persistPicture(picture: File)
     fun getPicturesBySpotId(id: String): List<Picture>
+    fun getStaticPictureFile(pictureId: String): File?
 }

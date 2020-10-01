@@ -3,10 +3,7 @@ package dev.remylavergne.spotfinder.data
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import io.ktor.util.KtorExperimentalAPI
-import org.litote.kmongo.eq
-import org.litote.kmongo.getCollection
-import org.litote.kmongo.aggregate
-import org.litote.kmongo.match
+import org.litote.kmongo.*
 
 @KtorExperimentalAPI
 class DatabaseHelperImpl : DatabaseHelper {
@@ -35,5 +32,11 @@ class DatabaseHelperImpl : DatabaseHelper {
         } catch (e: Exception) {
             listOf()
         }
+    }
+
+    override fun getPictureById(id: String): Picture? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return collection.findOne(Picture::id eq id)
     }
 }

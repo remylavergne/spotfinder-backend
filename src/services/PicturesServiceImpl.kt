@@ -2,9 +2,12 @@ package dev.remylavergne.spotfinder.services
 
 import dev.remylavergne.spotfinder.repositories.PicturesRepository
 import dev.remylavergne.spotfinder.utils.toJson
+import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.http.content.MultiPartData
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
+import java.io.File
 
 class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : PicturesService {
 
@@ -27,5 +30,11 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : Pictur
 
     override suspend fun getPicturesBySpotId(id: String): String {
         return picturesRepo.getPicturesBySpotId(id).toJson()
+    }
+
+    override fun getStaticContentPicture(ac: ApplicationCall): File? {
+        val pictureId = ac.parameters["pictureId"]
+        checkNotNull(pictureId)
+       return picturesRepo.getStaticPictureFile(pictureId)
     }
 }
