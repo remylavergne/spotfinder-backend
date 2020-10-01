@@ -1,51 +1,69 @@
 package dev.remylavergne.spotfinder.repositories
 
 import dev.remylavergne.spotfinder.data.DatabaseHelper
+import dev.remylavergne.spotfinder.data.FileHelper
 import dev.remylavergne.spotfinder.data.models.Picture
 import io.ktor.http.content.PartData
 import io.ktor.http.content.streamProvider
 import java.io.File
-import java.util.UUID
 
 class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : PicturesRepository {
-    override fun savePictureAsFile(spotIdPart: PartData, picturePart: PartData): File? {
+    override fun savePictureAsFile(parts: List<PartData>): File? {
         var spotId: String? = null
-        when (spotIdPart.name) {
-            "spotId" -> spotId = (spotIdPart as PartData.FormItem).value
-            else -> throw Exception("Unknown part value")
-        }
-        // Backup file
-        try {
-            val ext = File((picturePart as PartData.FileItem).originalFileName ?: "no_name").extension
+        var userId: String? = null
+        var picture: File? = null
 
-            // TODO: Create a specific folder by Spot "/pictures/<spotId>/"
-            val picture = File(
-                "pictures", // TODO: Get global upload dir here
-                "$spotId-${picturePart.originalFileName}-${System.currentTimeMillis()}.$ext"
-            )
-
-            picturePart.streamProvider().use { its ->
-                picture.outputStream().buffered().use { test ->
-                    its.copyTo(test)
+        // Separate ids from picture informations
+        val idParts = parts.filterIsInstance<PartData.FormItem>()
+        val pictureParts = parts.filterIsInstance<PartData.FileItem>()
+        // Extract ids
+        idParts.forEach { p: PartData ->
+            when (p) {
+                is PartData.FormItem -> {
+                    when (p.name) {
+                        "spotId" -> spotId = p.value
+                        "userId" -> userId = p.value
+                    }
                 }
-            }
 
-            return picture
-        } catch (e: Exception) {
-            println(e) // TODO: Handle exception
+                else -> throw Error(" Unknow PartData")
+            }
+        }
+        // Check values
+        checkNotNull(spotId)
+        checkNotNull(userId)
+        // Extract picture
+        pictureParts.forEach { p: PartData ->
+            when (p) {
+                is PartData.FileItem -> {
+                    try {
+                        val ext = File(p.originalFileName ?: "no_name").extension
+
+                        val spotDirectory = FileHelper.getOrCreateUploadDir(spotId!!)
+
+                        picture = File(
+                            spotDirectory,
+                            "$spotId--$userId--${System.currentTimeMillis()}.$ext"
+                        )
+
+                        p.streamProvider().use { its ->
+                            picture?.outputStream()?.buffered()?.use { stream ->
+                                its.copyTo(stream)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        println(e) // TODO: Handle exception
+                    }
+                }
+                else -> throw Exception("Unknown part value")
+            }
         }
 
-        return null
+        return picture
     }
 
     override fun persistPicture(picture: File) {
-        val filename: String = picture.nameWithoutExtension
-        val infos = filename.split("-")
-        val spotId = infos[0]
-        // val riderId = infos[1]
-        // TODO: Récupérer l'identifiant dans le path
-        val newPicture = Picture(filename = filename, createdBy = UUID.randomUUID().toString(), spotId = spotId)
-
+        val newPicture = Picture.fromFile(picture, FileHelper.uploadDir.path)
         databaseHelper.persistPicture(newPicture)
     }
 

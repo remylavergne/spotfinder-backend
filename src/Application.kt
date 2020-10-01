@@ -3,12 +3,12 @@ package dev.remylavergne.spotfinder
 import dev.remylavergne.spotfinder.controllers.picturesController
 import dev.remylavergne.spotfinder.controllers.spotsController
 import dev.remylavergne.spotfinder.data.DatabaseProvider
+import dev.remylavergne.spotfinder.data.FileHelper
 import dev.remylavergne.spotfinder.injection.mainModule
 import dev.remylavergne.spotfinder.injection.toolsModule
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.application.ApplicationEnvironment
 import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -18,7 +18,6 @@ import io.ktor.routing.*
 import io.ktor.util.*
 import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
-import java.io.File
 
 // TODO: Get and check environment variable at startup
 
@@ -29,17 +28,13 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     installPlugins(this)
+    FileHelper.getUploadDir(environment)
     DatabaseProvider.initialize(this)
-    val uploadDir = getUploadDir(environment)
 
     routing {
-        get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-        }
-
         spotsController()
-        picturesController(uploadDir)
-
+        picturesController()
+        // Authentication
         authenticate("myBasicAuth") {
             get("/protected/route/basic") {
                 val principal = call.principal<UserIdPrincipal>()!!
@@ -84,22 +79,4 @@ fun installPlugins(app: Application) {
 
     app.install(ContentNegotiation) {
     }
-}
-
-/**
- * Create a directory for uploads
- * Configuration located in application.conf
- */
-@KtorExperimentalAPI
-fun getUploadDir(environment: ApplicationEnvironment): File {
-    val picturesConfig = environment.config.config("pictures")
-
-    val uploadDirPath: String = picturesConfig.property("upload.dir").getString()
-    val uploadDir = File(uploadDirPath)
-
-    if (!uploadDir.exists()) {
-        uploadDir.mkdirs()
-    }
-
-    return uploadDir
 }

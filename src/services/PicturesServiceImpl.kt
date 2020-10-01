@@ -11,16 +11,18 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : Pictur
     override suspend fun savePicture(data: MultiPartData): String {
 
         val partData = mutableListOf<PartData>()
+
         // Extract all parts
         data.forEachPart { part: PartData -> partData.add(part) }
         // Check if all parts needed are available
-        val spotIdPart = partData.find { it is PartData.FormItem } ?: return "Error spotId missing"
-        val picturePart = partData.find { it is PartData.FileItem } ?: return "Error picture missing"
+        if (partData.count() != 3) {
+            return "ERROR"
+        }
         // Create and Backup picture
-        picturesRepo.savePictureAsFile(spotIdPart, picturePart)?.let { picturesRepo.persistPicture(it) }
+        picturesRepo.savePictureAsFile(partData)?.let { picturesRepo.persistPicture(it) }
             ?: return "ERROR"
 
-        return "OK" // TODO: Change this
+        return "OK"
     }
 
     override suspend fun getPicturesBySpotId(id: String): String {
