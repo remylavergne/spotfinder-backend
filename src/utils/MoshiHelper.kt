@@ -36,7 +36,10 @@ object MoshiHelper {
         return getAdapter<T>().fromJson(json)
     }
 
-    /*inline fun <reified T> toJson(data: T): String {
-        return getAdapter<T>().toJson(T)
-    }*/
+    inline fun <reified T> toJson(data: T): String? {
+        if (data == null) {
+            return null
+        }
+        return getAdapter<T>().toJson(data)
+    }
 }
