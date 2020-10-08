@@ -4,6 +4,7 @@ import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
 import dev.remylavergne.spotfinder.services.SpotsService
 import dev.remylavergne.spotfinder.utils.getResponseObject
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.get
@@ -18,5 +19,49 @@ fun Route.spotsController() {
             val response = spotsService.createNewSpot(it)
             call.respondText(response)
         } ?: call.respond("Error")
+    }
+
+    get("/spot/all") {
+        val jsonSpots = spotsService.getSpots()
+        call.respondText(
+            contentType = ContentType.Application.Json,
+            text = jsonSpots,
+            status = HttpStatusCode.OK
+        )
+    }
+
+    get("/spot/id/{id}") {
+        call.parameters["id"]?.let { spotId: String ->
+            spotsService.getSpotById(spotId)?.let { jsonSpot: String ->
+                call.respondText(
+                    contentType = ContentType.Application.Json,
+                    text = jsonSpot,
+                    status = HttpStatusCode.OK
+                )
+            } ?: call.respondText(
+                text = "Error, spot doesn't exist",
+                status = HttpStatusCode.NotFound,
+                contentType = ContentType.Text.Plain
+            )
+        } ?: call.respondText(
+            text = "Error, id missing",
+            status = HttpStatusCode.NotFound,
+            contentType = ContentType.Text.Plain
+        )
+    }
+
+    get("/spot/rider/{id}") {
+        call.parameters["id"]?.let { riderId: String ->
+            val jsonSpots = spotsService.getSpotsByRider(riderId)
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = jsonSpots,
+                status = HttpStatusCode.OK
+            )
+        } ?: call.respondText(
+            text = "Error, id missing",
+            status = HttpStatusCode.NotFound,
+            contentType = ContentType.Text.Plain
+        )
     }
 }

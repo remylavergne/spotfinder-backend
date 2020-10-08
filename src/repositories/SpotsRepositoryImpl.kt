@@ -7,4 +7,20 @@ class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRep
     override fun persistSpot(spot: Spot): Boolean {
         return databaseHelper.persistSpot(spot)
     }
+
+    override fun getSpots(): List<Spot> {
+        return databaseHelper.getSpots()
+    }
+
+    override fun getSpotById(id: String): Spot? {
+        return databaseHelper.getSpotById(id)
+    }
+
+    override fun getSpotsByRider(id: String): List<Spot> {
+       return databaseHelper.getSpotsByRider(id)
+    }
+
+    override fun getSpotsByCountry(country: String): List<Spot> {
+        return databaseHelper.getSpotsByCountry(country)
+    }
 }
