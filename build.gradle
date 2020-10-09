@@ -54,6 +54,8 @@ dependencies {
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-auth:$ktor_version"
     implementation "io.ktor:ktor-auth-jwt:$ktor_version"
+    implementation "io.ktor:ktor-metrics:$ktor_version"
+    implementation "io.ktor:ktor-metrics-micrometer:$ktor_version"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version" // or "kotlin-stdlib-jdk8"
@@ -70,6 +72,7 @@ dependencies {
     implementation 'org.litote.kmongo:kmongo:4.1.2'
     detekt "io.gitlab.arturbosch.detekt:detekt-cli:1.13.1"
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.13.1"
+    compile 'io.micrometer:micrometer-registry-prometheus:1.5.5'
 
     // Unit tests
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"

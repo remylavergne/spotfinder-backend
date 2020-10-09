@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo-spotfinder
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express-spotfinder
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    container_name: prometheus-spotfinder
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 9090:9090
+    volumes:
+      - ./monitoring:/etc/prometheus/
+
+  grafana:
+    image: grafana/grafana:7.2.1-ubuntu
+    container_name: grafana-spotfinder
+    restart: always
+    depends_on:
+      - mongo
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+
+networks:
+  default:
+    external:
+      name: spotfinder
