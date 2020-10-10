@@ -2,47 +2,56 @@ package dev.remylavergne.spotfinder.mocks
 
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.data.SpotfinderCollections
+import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
-import io.ktor.application.Application
+import io.ktor.util.KtorExperimentalAPI
 import java.util.UUID
 import kotlin.random.Random
-import org.koin.ktor.ext.get
-import org.litote.kmongo.insertOne
 import org.litote.kmongo.getCollection
 
 object Mocks {
 
-    fun populateDatabase(app: Application) {
+    // Public
+
+    @KtorExperimentalAPI
+    fun populateSpotMock(users: List<String>, howMany: Int = 1) {
         val collection = DatabaseProvider.database.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
-        val mock: List<Spot> = generateSpotMock()
-        collection.insertOne(mock.first())
+        val mocks: List<Spot> = generateSpotMock(users, howMany)
+        collection.insertMany(mocks)
     }
 
-    fun generateSpotMock(n: Int = 1): List<Spot> {
-        val mocks = mutableListOf<Spot>()
-        var i = 0
-        while (i != n) {
-            mocks.add(
-                Spot(
-                    id = UUID.randomUUID().toString(),
-                    bio = bios.shuffled()[0],
-                    name = cableParksName.shuffled()[0],
-                    address = null,
-                    country = null,
-                    disciplines = 12,
-                    longitude = generateLongitude(),
-                    latitude = generateLatitude(),
-                    creationDate = System.currentTimeMillis(),
-                    modificationDate = System.currentTimeMillis(),
-                    allowed = true,
-                    rider = UUID.randomUUID().toString()
+    // Private
+
+    private fun generateSpotMock(users: List<String>, n: Int = 1): List<Spot> {
+        val allMocks = mutableListOf<Spot>()
+        users.forEach { userId: String ->
+            val mocks = mutableListOf<Spot>()
+            for (i in 0..n) {
+                mocks.add(
+                    Spot(
+                        id = UUID.randomUUID().toString(),
+                        bio = bios.shuffled()[0],
+                        name = cableParksName.shuffled()[0],
+                        address = null,
+                        country = null,
+                        disciplines = 12,
+                        longitude = generateLongitude(),
+                        latitude = generateLatitude(),
+                        creationDate = System.currentTimeMillis(),
+                        modificationDate = System.currentTimeMillis(),
+                        allowed = true,
+                        rider = userId
+                    )
                 )
-            )
-            i++
+            }
+
+            allMocks.addAll(mocks)
         }
 
-        return mocks
+        return allMocks
     }
+
+    // Utils
 
     private val bios = listOf<String>(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vitae felis vel arcu tempor viverra. Aliquam erat volutpat. Curabitur ullamcorper vitae ipsum et dictum.",
