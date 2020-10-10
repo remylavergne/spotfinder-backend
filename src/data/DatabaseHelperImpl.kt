@@ -40,6 +40,10 @@ class DatabaseHelperImpl : DatabaseHelper {
         return collection.findOne(Picture::id eq id)
     }
 
+    override fun getPicturesByRiderId(id: String): List<Picture> {
+        return listOf()
+    }
+
     override fun getSpots(): List<Spot> {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)

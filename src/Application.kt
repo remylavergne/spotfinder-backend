@@ -1,25 +1,19 @@
 package dev.remylavergne.spotfinder
 
+import dev.remylavergne.spotfinder.controllers.metricsController
 import dev.remylavergne.spotfinder.controllers.picturesController
 import dev.remylavergne.spotfinder.controllers.spotsController
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.data.FileHelper
-import dev.remylavergne.spotfinder.injection.mainModule
-import dev.remylavergne.spotfinder.injection.toolsModule
 import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.*
-import org.koin.ktor.ext.Koin
-import org.slf4j.event.Level
-
-// TODO: Get and check environment variable at startup
+import io.ktor.auth.authenticate
+import io.ktor.auth.principal
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.response.respondText
+import io.ktor.routing.routing
+import io.ktor.routing.get
+import io.ktor.util.KtorExperimentalAPI
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -27,13 +21,14 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
-    installPlugins(this)
+    loadModules()
     FileHelper.getUploadDir(environment)
     DatabaseProvider.initialize(this)
 
     routing {
         spotsController()
         picturesController()
+        metricsController()
         // Authentication
         authenticate("myBasicAuth") {
             get("/protected/route/basic") {
@@ -41,42 +36,5 @@ fun Application.module(testing: Boolean = false) {
                 call.respondText("Hello ${principal.name}")
             }
         }
-    }
-}
-
-fun installPlugins(app: Application) {
-    app.install(Koin) {
-        modules(mainModule, toolsModule)
-    }
-
-    app.install(Compression) {
-        gzip {
-            priority = 1.0
-        }
-        deflate {
-            priority = 10.0
-            minimumSize(1024) // condition
-        }
-    }
-
-    app.install(AutoHeadResponse)
-
-    app.install(CallLogging) {
-        level = Level.INFO
-        filter { call -> call.request.path().startsWith("/") }
-    }
-
-    app.install(DefaultHeaders) {
-        header("X-Engine", "Ktor") // will send this header with each response
-    }
-
-    app.install(Authentication) {
-        basic("myBasicAuth") {
-            realm = "Ktor Server"
-            validate { if (it.name == "test" && it.password == "password") UserIdPrincipal(it.name) else null }
-        }
-    }
-
-    app.install(ContentNegotiation) {
     }
 }
