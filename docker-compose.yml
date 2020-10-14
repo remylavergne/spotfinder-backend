@@ -23,12 +23,29 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
 
+  spotfinder-backend:
+    build: .
+    image: spotfinder-backend
+    container_name: spotfinder-backend
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 8080:8080
+    environment:
+      MONGO_PASS: root
+      MONGO_USER: root
+      MONGO_HOST: mongo
+      MONGO_DATABASE_NAME: spotfinder
+      MONGO_PORT: 27017
+
   prometheus:
     image: prom/prometheus:v2.21.0
     container_name: prometheus-spotfinder
     restart: always
     depends_on:
       - mongo
+      - spotfinder-backend
     ports:
       - 9090:9090
     volumes:
@@ -41,6 +58,7 @@ services:
     depends_on:
       - mongo
       - prometheus
+      - spotfinder-backend
     ports:
       - 3000:3000
     volumes:

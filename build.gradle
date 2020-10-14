@@ -81,7 +81,8 @@ dependencies {
 detekt {
     failFast = true // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
-    config = files("config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    config = files("config/detekt.yml")
+    // point to your custom config defining rules to run, overwriting default behavior
     baseline = file("config/baseline.xml") // a way of suppressing issues before introducing detekt
 
     reports {
@@ -94,6 +95,9 @@ detekt {
 tasks.detekt.jvmTarget = "1.8"
 
 shadowJar {
+    archiveBaseName.set('spotfinder-backend')
+    archiveClassifier.set('')
+    archiveVersion.set('')
     manifest {
         attributes 'Main-Class': mainClassName
     }
