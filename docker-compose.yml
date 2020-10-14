@@ -32,6 +32,8 @@ services:
       - mongo
     ports:
       - 8080:8080
+    volumes:
+      - ./pictures:/app/pictures
     environment:
       MONGO_PASS: root
       MONGO_USER: root
