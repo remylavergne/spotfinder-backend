@@ -23,4 +23,12 @@ class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRep
     override fun getSpotsByCountry(country: String): List<Spot> {
         return databaseHelper.getSpotsByCountry(country)
     }
+
+    override fun getPaginatedSpots(page: Int, limit: Int): List<Spot> {
+        return databaseHelper.getPaginatedSpots(page, limit)
+    }
+
+    override fun getSpotsCount(): Long {
+        return databaseHelper.getSpotsCount()
+    }
 }

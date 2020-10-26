@@ -3,6 +3,7 @@ package dev.remylavergne.spotfinder.data
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import io.ktor.util.KtorExperimentalAPI
+import org.bson.conversions.Bson
 import org.litote.kmongo.*
 
 @KtorExperimentalAPI
@@ -76,5 +77,68 @@ class DatabaseHelperImpl : DatabaseHelper {
 
     override fun getSpotsByCountry(country: String): List<Spot> {
         TODO("Not yet implemented")
+    }
+
+    override fun getPaginatedSpots(page: Int, limit: Int): List<Spot> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection.find(Spot::allowed eq true)
+                .descendingSort(Spot::creationDate)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
+    override fun getSpotsCount(): Long { // TODO: Prendre en compte seulement les Spots valides
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection
+                .find(Spot::allowed eq true)
+                .count()
+                .toLong()
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    // TODO: A tester !
+    override fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): List<Picture> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            collection.find(match(Picture::allowed eq true, Picture::spotId eq id))
+                .descendingSort(Picture::createdAt)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
+    // TODO: A tester !
+    override fun getPicturesCountBySpot(id: String): Long {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            collection.find(match(Picture::allowed eq true, Picture::spotId eq id)).count().toLong()
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    override fun getPicturesCount(): Long {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            collection.countDocuments()
+        } catch (e: Exception) {
+            0
+        }
     }
 }

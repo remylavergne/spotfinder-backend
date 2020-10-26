@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder
 
+import dev.remylavergne.spotfinder.controllers.defaultController
 import dev.remylavergne.spotfinder.controllers.metricsController
 import dev.remylavergne.spotfinder.controllers.picturesController
 import dev.remylavergne.spotfinder.controllers.spotsController
@@ -26,6 +27,7 @@ fun Application.module(testing: Boolean = false) {
     DatabaseProvider.initialize(this)
 
     routing {
+        defaultController()
         spotsController()
         picturesController()
         metricsController()

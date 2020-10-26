@@ -1,10 +1,10 @@
 package dev.remylavergne.spotfinder.data.models
 
+import com.squareup.moshi.JsonClass
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
-import kotlinx.serialization.Serializable
-import java.util.*
+import java.util.UUID
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class Spot(
     var id: String,
     var bio: String,

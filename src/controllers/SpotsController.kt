@@ -30,6 +30,16 @@ fun Route.spotsController() {
         )
     }
 
+    get("/spots") {
+        val queryParams = call.request.queryParameters
+        val response = spotsService.getPaginatedSpots(queryParams)
+        call.respondText(
+            contentType = ContentType.Application.Json,
+            text = response,
+            status = HttpStatusCode.OK
+        )
+    }
+
     get("/spot/id/{id}") {
         call.parameters["id"]?.let { spotId: String ->
             spotsService.getSpotById(spotId)?.let { jsonSpot: String ->
