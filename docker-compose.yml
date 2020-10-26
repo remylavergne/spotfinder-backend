@@ -66,6 +66,20 @@ services:
     volumes:
       - ./monitoring/grafana:/var/lib/grafana
 
+  redoc:
+    image: redocly/redoc:latest
+    container_name: redoc-spotfinder
+    restart: always
+    depends_on:
+      - mongo
+      - spotfinder-backend
+    ports:
+      - 8082:80
+    environment:
+      SPEC_URL: './redoc/swagger.json'
+    volumes:
+      - ./redoc:/usr/share/nginx/html/swagger.yaml
+
 networks:
   default:
     external:

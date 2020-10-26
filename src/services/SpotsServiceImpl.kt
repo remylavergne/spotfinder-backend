@@ -1,10 +1,14 @@
 package dev.remylavergne.spotfinder.services
 
+import dev.remylavergne.spotfinder.controllers.dto.Pagination
+import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.repositories.SpotsRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
+import dev.remylavergne.spotfinder.utils.exceptions.MissingQueryParams
 import dev.remylavergne.spotfinder.utils.toJson
+import io.ktor.http.*
 
 class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsService {
 
@@ -35,5 +39,27 @@ class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsServ
 
     override fun getSpotsByCountry(country: String): String {
         TODO("Not yet implemented")
+    }
+
+    override fun getPaginatedSpots(queryParams: Parameters): String {
+        val page = queryParams["page"]?.toInt()
+        val limit = queryParams["limit"]?.toInt()
+        if (page == null || limit == null) {
+            throw MissingQueryParams("QueryParams 'page' and 'limit' are mandatory")
+        }
+        val spots = spotsRepository.getPaginatedSpots(page, limit)
+
+        val totalSpots = getSpotsCount()
+
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value, result = spots,
+            pagination = Pagination(currentPage = page, itemsPerPages = spots.count(), totalItems = totalSpots)
+        )
+
+        return MoshiHelper.wrapperToJson(response)
+    }
+
+    override fun getSpotsCount(): Long {
+        return spotsRepository.getSpotsCount()
     }
 }

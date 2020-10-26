@@ -2,8 +2,11 @@ package dev.remylavergne.spotfinder
 
 import dev.remylavergne.spotfinder.injection.mainModule
 import dev.remylavergne.spotfinder.injection.toolsModule
+import dev.remylavergne.spotfinder.utils.exceptions.MissingQueryParams
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.features.*
+import io.ktor.http.*
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
@@ -15,16 +18,9 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
-import io.ktor.features.Compression
-import io.ktor.features.AutoHeadResponse
-import io.ktor.features.CallLogging
-import io.ktor.features.DefaultHeaders
-import io.ktor.features.gzip
-import io.ktor.features.deflate
-import io.ktor.features.minimumSize
-import io.ktor.features.ContentNegotiation
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.request.path
+import io.ktor.response.*
 
 fun Application.loadModules() {
     install(Koin) {
@@ -41,7 +37,14 @@ fun Application.loadModules() {
         }
     }
 
-    install(AutoHeadResponse)
+    install(StatusPages) {
+        exception<MissingQueryParams> { cause ->
+            call.respond(HttpStatusCode.NotAcceptable, cause.message)
+            throw cause
+        }
+    }
+
+    // install(AutoHeadResponse)
 
     install(CallLogging) {
         level = Level.INFO

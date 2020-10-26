@@ -3,11 +3,8 @@ package dev.remylavergne.spotfinder.utils
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import javax.smartcardio.Card
-
-
-
+import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
+import kotlin.reflect.KClass
 
 object MoshiHelper {
 
@@ -18,7 +15,7 @@ object MoshiHelper {
     }
 
     private fun getMoshiInstance(): Moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
+        //.add(KotlinJsonAdapterFactory())
         .build()
 
     // API
@@ -41,5 +38,11 @@ object MoshiHelper {
             return null
         }
         return getAdapter<T>().toJson(data)
+    }
+
+    inline fun <reified T> wrapperToJson(data: ResultWrapper<T>): String {
+        val t = Types.newParameterizedType(ResultWrapper::class.java, T::class.java)
+        val jsonAdapter: JsonAdapter<ResultWrapper<T>> = moshi.adapter(t)
+        return jsonAdapter.toJson(data)
     }
 }

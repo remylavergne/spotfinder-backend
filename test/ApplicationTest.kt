@@ -10,8 +10,10 @@ import io.ktor.http.*
 import io.ktor.auth.*
 import kotlin.test.*
 import io.ktor.server.testing.*
+import io.ktor.util.*
 
 class ApplicationTest {
+    @KtorExperimentalAPI
     @Test
     fun testRoot() {
         withTestApplication({ module(testing = true) }) {
