@@ -1,9 +1,6 @@
 package dev.remylavergne.spotfinder
 
-import dev.remylavergne.spotfinder.controllers.defaultController
-import dev.remylavergne.spotfinder.controllers.metricsController
-import dev.remylavergne.spotfinder.controllers.picturesController
-import dev.remylavergne.spotfinder.controllers.spotsController
+import dev.remylavergne.spotfinder.controllers.*
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.data.FileHelper
 import io.ktor.application.Application
@@ -28,6 +25,7 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         defaultController()
+        usersController()
         spotsController()
         picturesController()
         metricsController()

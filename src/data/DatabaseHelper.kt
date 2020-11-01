@@ -43,4 +43,7 @@ interface DatabaseHelper {
      * @return total count
      */
     fun getPicturesCount(): Long
+
+    // Users
+    fun logUserConnection(userId: String)
 }
