@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.data
 
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
+import dev.remylavergne.spotfinder.data.models.User
 import io.ktor.util.KtorExperimentalAPI
 import org.bson.conversions.Bson
 import org.litote.kmongo.*
@@ -106,7 +107,6 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
-    // TODO: A tester !
     override fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): List<Picture> {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
@@ -140,5 +140,23 @@ class DatabaseHelperImpl : DatabaseHelper {
         } catch (e: Exception) {
             0
         }
+    }
+
+    override fun logUserConnection(userId: String) {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        // Get -> update
+        try {
+            collection.findOne(User::id eq userId)?.let { user: User ->
+                collection.updateOne(User::id eq userId, setValue(User::lastConnexion, System.currentTimeMillis()))
+                return
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
+        // if not, create -> insert
+        val currentTime = System.currentTimeMillis()
+        val user = User(userId, currentTime, currentTime)
+        collection.insertOne(user)
     }
 }

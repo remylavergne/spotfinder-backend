@@ -3,5 +3,5 @@ package dev.remylavergne.spotfinder.data
 enum class SpotfinderCollections(val value: String) {
     SPOTS("spots"),
     PICTURES("pictures"),
-    RIDERS("riders")
+    USERS("users")
 }
