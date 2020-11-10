@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.data
 
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
+import dev.remylavergne.spotfinder.data.models.User
 
 interface DatabaseHelper {
     // Spots
@@ -46,4 +47,6 @@ interface DatabaseHelper {
 
     // Users
     fun logUserConnection(userId: String)
+    fun getUserByUsername(username: String): User?
+    fun getUserById(id: String): User?
 }

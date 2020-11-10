@@ -8,7 +8,7 @@ data class ResultWrapper<T>(
     val statusCode: Int,
     val time: Long = System.currentTimeMillis(),
     val result: T,
-    val pagination: Pagination?
+    val pagination: Pagination? = null
 ) {
     inline fun <reified T> toJson(type: Class<T>): String {
         // return MoshiHelper.wrapperToJson(this, type)

@@ -31,7 +31,7 @@ fun Route.spotsController() {
     }
 
     get("/spots") {
-        val queryParams = call.request.queryParameters
+        val queryParams: Parameters = call.request.queryParameters
         val response = spotsService.getPaginatedSpots(queryParams)
         call.respondText(
             contentType = ContentType.Application.Json,

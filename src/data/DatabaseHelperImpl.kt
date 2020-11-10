@@ -159,4 +159,33 @@ class DatabaseHelperImpl : DatabaseHelper {
         val user = User(userId, currentTime, currentTime)
         collection.insertOne(user)
     }
+
+    override fun getUserByUsername(username: String): User? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            val existingUsernames = collection.distinct(User::username).filterNotNull().map { it.toLowerCase() }
+            val isUsernameAlreadyExist = existingUsernames.find { it == username.toLowerCase() }
+
+            return if (isUsernameAlreadyExist.isNullOrEmpty()) {
+                null
+            } else {
+                collection.findOne(User::username eq username)
+            }
+        } catch (e: Exception) {
+            println(e)
+            null
+        }
+    }
+
+    override fun getUserById(id: String): User? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            collection.findOne(User::id eq id)
+        } catch (e: Exception) {
+            println(e)
+            null
+        }
+    }
 }
