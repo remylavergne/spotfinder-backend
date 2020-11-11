@@ -52,7 +52,8 @@ class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsServ
         val totalSpots = getSpotsCount()
 
         val response = ResultWrapper(
-            statusCode = HttpStatusCode.OK.value, result = spots,
+            statusCode = HttpStatusCode.OK.value,
+            result = spots,
             pagination = Pagination(currentPage = page, itemsPerPages = spots.count(), totalItems = totalSpots)
         )
 

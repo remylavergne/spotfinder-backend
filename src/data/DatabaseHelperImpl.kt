@@ -143,20 +143,70 @@ class DatabaseHelperImpl : DatabaseHelper {
     }
 
     override fun logUserConnection(userId: String) {
+        /* val db = DatabaseProvider.database
+         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+         // Get -> update
+         try {
+             collection.findOne(User::id eq userId)?.let { user: User ->
+                 collection.updateOne(User::id eq userId, setValue(User::lastConnexion, System.currentTimeMillis()))
+                 return
+             }
+         } catch (e: Exception) {
+             println(e)
+         }
+         // if not, create -> insert
+         val currentTime = System.currentTimeMillis()
+         val user = User(userId, currentTime, currentTime)
+         collection.insertOne(user)
+         */
+    }
+
+    override fun isUsernameExist(username: String): Boolean {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
-        // Get -> update
-        try {
-            collection.findOne(User::id eq userId)?.let { user: User ->
-                collection.updateOne(User::id eq userId, setValue(User::lastConnexion, System.currentTimeMillis()))
-                return
+        val existingUsernames = collection.distinct(User::username).filterNotNull().map { it.toLowerCase() }
+        val isUsernameAlreadyExist = existingUsernames.find { it == username.toLowerCase() }
+
+        return !isUsernameAlreadyExist.isNullOrEmpty()
+    }
+
+    override fun getUserByUsername(username: String): User? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            val existingUsernames = collection.distinct(User::username).filterNotNull().map { it.toLowerCase() }
+            val isUsernameAlreadyExist = existingUsernames.find { it == username.toLowerCase() }
+
+            return if (isUsernameAlreadyExist.isNullOrEmpty()) {
+                null
+            } else {
+                collection.findOne(User::username eq username)
             }
         } catch (e: Exception) {
             println(e)
+            null
         }
-        // if not, create -> insert
-        val currentTime = System.currentTimeMillis()
-        val user = User(userId, currentTime, currentTime)
-        collection.insertOne(user)
+    }
+
+    override fun getUserById(id: String): User? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            collection.findOne(User::id eq id)
+        } catch (e: Exception) {
+            println(e)
+            null
+        }
+    }
+
+    override fun createUser(user: User): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            collection.insertOne(user)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }
