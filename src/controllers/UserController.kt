@@ -40,20 +40,20 @@ fun Route.usersController() {
             throw Exception("Username must not be empty")
         }
 
-        userService.createUser(username).let { success: Boolean ->
-            if (success) {
-                call.respondText(
-                    text = "User created",
-                    status = HttpStatusCode.OK,
-                    contentType = ContentType.Text.Plain
-                )
-            } else {
-                call.respondText(
-                    text = "User not created",
-                    status = HttpStatusCode.InternalServerError,
-                    contentType = ContentType.Text.Plain
-                )
-            }
+        val user = userService.createUser(username)
+
+        if (user == null) {
+            call.respondText(
+                text = "User not created",
+                status = HttpStatusCode.InternalServerError,
+                contentType = ContentType.Text.Plain
+            )
+        } else {
+            call.respondText(
+                text = user,
+                status = HttpStatusCode.OK,
+                contentType = ContentType.Text.Plain
+            )
         }
     }
 
