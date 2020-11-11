@@ -21,11 +21,7 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         val user = userRepository.getUser(id, username)
 
         return if (user != null) {
-            val response = ResultWrapper(
-                statusCode = HttpStatusCode.OK.value,
-                result = user
-            )
-            MoshiHelper.wrapperToJson(response)
+            MoshiHelper.toJson(user)
         } else {
             null
         }

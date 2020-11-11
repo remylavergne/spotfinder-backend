@@ -45,7 +45,30 @@ fun Route.usersController() {
         if (user == null) {
             call.respondText(
                 text = "User not created",
-                status = HttpStatusCode.InternalServerError,
+                status = HttpStatusCode.NotFound,
+                contentType = ContentType.Text.Plain
+            )
+        } else {
+            call.respondText(
+                text = user,
+                status = HttpStatusCode.OK,
+                contentType = ContentType.Text.Plain
+            )
+        }
+    }
+
+    post("/user/connect") {
+        val id = call.receive<String>()
+        if (id.isEmpty()) {
+            throw Exception("Id must not be empty")
+        }
+
+        val user = userService.getUser(id = id, username = null)
+
+        if (user == null) {
+            call.respondText(
+                text = "User doesn't exist",
+                status = HttpStatusCode.NotFound,
                 contentType = ContentType.Text.Plain
             )
         } else {
