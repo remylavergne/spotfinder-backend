@@ -31,8 +31,13 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         }
     }
 
-    override fun createUser(username: String): Boolean {
+    override fun createUser(username: String): String? {
         val newUser = User.create(username)
-        return userRepository.insertUser(newUser)
+        val result = userRepository.insertUser(newUser)
+        return if (result) {
+            MoshiHelper.toJson(newUser)
+        } else {
+            null
+        }
     }
 }
