@@ -8,6 +8,7 @@ import dev.remylavergne.spotfinder.utils.MoshiHelper
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
+import java.util.*
 
 class UserServiceImpl(private val userRepository: UserRepository) : UserService {
     override fun logUserConnection(callParams: Parameters) {
@@ -26,7 +27,12 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
             )
             MoshiHelper.wrapperToJson(response)
         } else {
-           null
+            null
         }
+    }
+
+    override fun createUser(username: String): Boolean {
+        val newUser = User.create(username)
+        return userRepository.insertUser(newUser)
     }
 }

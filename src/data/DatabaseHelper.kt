@@ -47,6 +47,8 @@ interface DatabaseHelper {
 
     // Users
     fun logUserConnection(userId: String)
+    fun isUsernameExist(username: String): Boolean
     fun getUserByUsername(username: String): User?
     fun getUserById(id: String): User?
+    fun createUser(user: User): Boolean
 }

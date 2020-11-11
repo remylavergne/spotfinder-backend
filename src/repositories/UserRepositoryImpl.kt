@@ -10,9 +10,19 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
 
     override fun getUser(id: String?, username: String?): User? {
         return when {
-            !id.isNullOrEmpty() -> databaseHelper.getUserById(id)
             !username.isNullOrEmpty() -> databaseHelper.getUserByUsername(username)
+            !id.isNullOrEmpty() -> databaseHelper.getUserById(id)
             else -> null
+        }
+    }
+
+    override fun insertUser(newUser: User): Boolean {
+        val userFound = databaseHelper.isUsernameExist(newUser.username)
+
+        return if (userFound) {
+            false
+        } else {
+            databaseHelper.createUser(newUser)
         }
     }
 }
