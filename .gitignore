@@ -7,3 +7,4 @@
 *.iws
 /pictures
 /monitoring/grafana
+.DS_Store
