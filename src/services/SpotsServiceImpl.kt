@@ -12,15 +12,16 @@ import io.ktor.http.*
 
 class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsService {
 
-    override fun createNewSpot(dto: SpotCreationDto): String {
+    override fun createNewSpot(dto: SpotCreationDto): String? {
         // Create a real spot object
         val spot = Spot.fromCreationDto(dto)
         // Save spot into database
-        val result = spotsRepository.persistSpot(spot)
-        return if (result) { // TODO: Sealed class for Service State status
-            "Success"
+        val spotInserted = spotsRepository.persistSpot(spot)
+
+        return if (spotInserted != null) {
+            MoshiHelper.toJson(spotInserted)
         } else {
-            "Error"
+            null
         }
     }
 

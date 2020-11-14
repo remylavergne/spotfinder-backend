@@ -4,7 +4,7 @@ import dev.remylavergne.spotfinder.data.DatabaseHelper
 import dev.remylavergne.spotfinder.data.models.Spot
 
 class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRepository {
-    override fun persistSpot(spot: Spot): Boolean {
+    override fun persistSpot(spot: Spot): Spot? {
         return databaseHelper.persistSpot(spot)
     }
 

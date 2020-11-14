@@ -59,7 +59,7 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
             }
         }
 
-        return picture
+         return picture
     }
 
     override fun persistPicture(picture: File) {

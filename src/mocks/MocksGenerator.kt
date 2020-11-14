@@ -34,13 +34,12 @@ object Mocks {
                         name = cableParksName.shuffled()[0],
                         address = null,
                         country = null,
-                        disciplines = 12,
                         longitude = generateLongitude(),
                         latitude = generateLatitude(),
                         creationDate = System.currentTimeMillis(),
                         modificationDate = System.currentTimeMillis(),
                         allowed = true,
-                        rider = userId
+                        user = userId
                     )
                 )
             }

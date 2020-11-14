@@ -13,12 +13,25 @@ fun Route.spotsController() {
 
     val spotsService: SpotsService = get()
 
-    post("/spot/new") {
+    post("/spot/create") {
         call.getResponseObject<SpotCreationDto>()?.let {
             // Receive new spot informations
-            val response = spotsService.createNewSpot(it)
-            call.respondText(response)
-        } ?: call.respond("Error")
+            val spot = spotsService.createNewSpot(it)
+
+            return@post if (spot != null) {
+                call.respondText(
+                    contentType = ContentType.Application.Json,
+                    text = spot,
+                    status = HttpStatusCode.OK
+                )
+            } else {
+                call.respondText(
+                    text = "Error during Spot creation",
+                    status = HttpStatusCode.NotFound,
+                    contentType = ContentType.Text.Plain
+                )
+            }
+        }
     }
 
     get("/spot/all") {

@@ -15,14 +15,14 @@ class DatabaseHelperImpl : DatabaseHelper {
         collection.insertOne(picture)
     }
 
-    override fun persistSpot(spot: Spot): Boolean {
+    override fun persistSpot(spot: Spot): Spot? {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
         return try {
             collection.insertOne(spot)
-            true
+            spot
         } catch (e: Exception) {
-            false
+            null
         }
     }
 
@@ -70,7 +70,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
         return try {
-            collection.aggregate<Spot>(match(Spot::allowed eq true, Spot::rider eq id)).toList()
+            collection.aggregate<Spot>(match(Spot::allowed eq true, Spot::user eq id)).toList()
         } catch (e: Exception) {
             listOf()
         }

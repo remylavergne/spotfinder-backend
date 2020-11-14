@@ -6,7 +6,7 @@ import dev.remylavergne.spotfinder.data.models.User
 
 interface DatabaseHelper {
     // Spots
-    fun persistSpot(spot: Spot): Boolean
+    fun persistSpot(spot: Spot): Spot?
     fun getSpots(): List<Spot>
     fun getSpotById(id: String): Spot?
     fun getSpotsByRider(id: String): List<Spot>

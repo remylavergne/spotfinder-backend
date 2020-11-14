@@ -6,7 +6,7 @@ import dev.remylavergne.spotfinder.data.models.Spot
 import io.ktor.http.*
 
 interface SpotsService {
-    fun createNewSpot(dto: SpotCreationDto): String
+    fun createNewSpot(dto: SpotCreationDto): String?
     fun getSpots(): String
     fun getSpotById(id: String): String?
     fun getSpotsByRider(id: String): String

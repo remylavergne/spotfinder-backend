@@ -3,7 +3,7 @@ package dev.remylavergne.spotfinder.repositories
 import dev.remylavergne.spotfinder.data.models.Spot
 
 interface SpotsRepository {
-    fun persistSpot(spot: Spot): Boolean
+    fun persistSpot(spot: Spot): Spot?
     fun getSpots(): List<Spot>
     fun getSpotById(id: String): Spot?
     fun getSpotsByRider(id: String): List<Spot>

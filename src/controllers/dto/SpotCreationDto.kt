@@ -1,11 +1,11 @@
 package dev.remylavergne.spotfinder.controllers.dto
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class SpotCreationDto(
-    var bio: String,
-    var name: String,
-    var country: String,
-    var disciplines: Int,
+    var name: String?,
     var longitude: Double,
     var latitude: Double,
-    var rider: String
+    var user: String
 )
