@@ -1,6 +1,7 @@
 package dev.remylavergne.spotfinder.repositories
 
 import dev.remylavergne.spotfinder.data.DatabaseHelper
+import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 
 class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRepository {
@@ -24,11 +25,15 @@ class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRep
         return databaseHelper.getSpotsByCountry(country)
     }
 
-    override fun getPaginatedSpots(page: Int, limit: Int): List<Spot> {
-        return databaseHelper.getPaginatedSpots(page, limit)
+    override fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot> {
+        return databaseHelper.getLatestPaginatedSpots(page, limit)
     }
 
     override fun getSpotsCount(): Long {
         return databaseHelper.getSpotsCount()
+    }
+
+    override fun updatePictureId(picture: Picture): Boolean {
+        return databaseHelper.updatePictureId(picture)
     }
 }

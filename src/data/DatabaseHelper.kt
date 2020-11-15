@@ -11,7 +11,7 @@ interface DatabaseHelper {
     fun getSpotById(id: String): Spot?
     fun getSpotsByRider(id: String): List<Spot>
     fun getSpotsByCountry(country: String): List<Spot>
-    fun getPaginatedSpots(page: Int, limit: Int): List<Spot>
+    fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot>
 
     /**
      * Get Spot allowed documents total number
@@ -51,4 +51,5 @@ interface DatabaseHelper {
     fun getUserByUsername(username: String): User?
     fun getUserById(id: String): User?
     fun createUser(user: User): Boolean
+    fun updatePictureId(picture: Picture): Boolean
 }

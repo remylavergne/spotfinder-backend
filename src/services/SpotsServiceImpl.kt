@@ -42,13 +42,13 @@ class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsServ
         TODO("Not yet implemented")
     }
 
-    override fun getPaginatedSpots(queryParams: Parameters): String {
+    override fun getLatestPaginatedSpots(queryParams: Parameters): String {
         val page = queryParams["page"]?.toInt()
         val limit = queryParams["limit"]?.toInt()
         if (page == null || limit == null) {
             throw MissingQueryParams("QueryParams 'page' and 'limit' are mandatory")
         }
-        val spots = spotsRepository.getPaginatedSpots(page, limit)
+        val spots = spotsRepository.getLatestPaginatedSpots(page, limit)
 
         val totalSpots = getSpotsCount()
 

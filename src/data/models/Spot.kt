@@ -11,6 +11,7 @@ data class Spot(
     var name: String?,
     var address: String? = null,
     var country: String? = null,
+    var pictureId: String? = null,
     var longitude: Double,
     var latitude: Double,
     var creationDate: Long,

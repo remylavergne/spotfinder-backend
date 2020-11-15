@@ -6,7 +6,7 @@ import java.io.File
 
 interface PicturesRepository {
     fun savePictureAsFile(parts: List<PartData>): File?
-    fun persistPicture(picture: File)
+    fun persistPicture(picture: File): Picture
     fun getPicturesBySpotId(id: String): List<Picture>
     fun getStaticPictureFile(pictureId: String): File?
 }

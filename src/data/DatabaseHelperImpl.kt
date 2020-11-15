@@ -80,7 +80,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         TODO("Not yet implemented")
     }
 
-    override fun getPaginatedSpots(page: Int, limit: Int): List<Spot> {
+    override fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot> {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
         return try {
@@ -205,6 +205,26 @@ class DatabaseHelperImpl : DatabaseHelper {
         return try {
             collection.insertOne(user)
             true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override fun updatePictureId(picture: Picture): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            val spot = collection.findOne(Spot::id eq picture.spotId)
+            return when {
+                spot == null ->  false
+                spot.pictureId == null -> {
+                    collection.updateOne(Spot::id eq picture.spotId, setValue(Spot::pictureId, picture.id))
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
         } catch (e: Exception) {
             false
         }
