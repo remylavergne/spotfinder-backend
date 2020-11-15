@@ -59,12 +59,13 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
             }
         }
 
-         return picture
+        return picture
     }
 
-    override fun persistPicture(picture: File) {
+    override fun persistPicture(picture: File): Picture {
         val newPicture = Picture.fromFile(picture, FileHelper.uploadDir.path)
         databaseHelper.persistPicture(newPicture)
+        return newPicture
     }
 
     override fun getPicturesBySpotId(id: String): List<Picture> {

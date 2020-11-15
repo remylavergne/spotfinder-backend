@@ -10,7 +10,7 @@ import org.koin.dsl.module
 @KtorExperimentalAPI
 val mainModule = module(createdAtStart = true) {
     // Services
-    single<PicturesService> { PicturesServiceImpl(get()) }
+    single<PicturesService> { PicturesServiceImpl(get(), get()) }
     single<SpotsService> { SpotsServiceImpl(get()) }
     single<UserService> { UserServiceImpl(get()) }
     // Repositories

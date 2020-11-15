@@ -45,7 +45,7 @@ fun Route.spotsController() {
 
     get("/spots") {
         val queryParams: Parameters = call.request.queryParameters
-        val response = spotsService.getPaginatedSpots(queryParams)
+        val response = spotsService.getLatestPaginatedSpots(queryParams)
         call.respondText(
             contentType = ContentType.Application.Json,
             text = response,
@@ -73,6 +73,7 @@ fun Route.spotsController() {
         )
     }
 
+    // todo: Move to user controller
     get("/spot/rider/{id}") {
         call.parameters["id"]?.let { riderId: String ->
             val jsonSpots = spotsService.getSpotsByRider(riderId)

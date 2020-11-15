@@ -1,6 +1,7 @@
 package dev.remylavergne.spotfinder.services
 
 import dev.remylavergne.spotfinder.repositories.PicturesRepository
+import dev.remylavergne.spotfinder.repositories.SpotsRepository
 import dev.remylavergne.spotfinder.utils.toJson
 import io.ktor.application.*
 import io.ktor.http.*
@@ -9,7 +10,8 @@ import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import java.io.File
 
-class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : PicturesService {
+class PicturesServiceImpl(private val picturesRepo: PicturesRepository, private val spotsRepository: SpotsRepository) :
+    PicturesService {
 
     override suspend fun savePicture(data: MultiPartData): String {
 
@@ -22,10 +24,12 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : Pictur
             return "ERROR"
         }
         // Create and Backup picture
-        picturesRepo.savePictureAsFile(partData)?.let { picturesRepo.persistPicture(it) }
-            ?: return "ERROR"
+        picturesRepo.savePictureAsFile(partData)?.let { pictureFile: File ->
+            val picture = picturesRepo.persistPicture(pictureFile)
+            this.spotsRepository.updatePictureId(picture)
+        } ?: return "ERROR"
 
-        return "OK"
+        return "OK" // todo: rework
     }
 
     override suspend fun getPicturesBySpotId(id: String): String {
@@ -35,6 +39,6 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository) : Pictur
     override fun getStaticContentPicture(ac: ApplicationCall): File? {
         val pictureId = ac.parameters["pictureId"]
         checkNotNull(pictureId)
-       return picturesRepo.getStaticPictureFile(pictureId)
+        return picturesRepo.getStaticPictureFile(pictureId)
     }
 }
