@@ -1,7 +1,9 @@
 package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
+import dev.remylavergne.spotfinder.services.PicturesService
 import dev.remylavergne.spotfinder.services.SpotsService
+import dev.remylavergne.spotfinder.utils.exceptions.MissingQueryParams
 import dev.remylavergne.spotfinder.utils.getResponseObject
 import io.ktor.application.*
 import io.ktor.http.*
@@ -12,6 +14,7 @@ import org.koin.ktor.ext.get
 fun Route.spotsController() {
 
     val spotsService: SpotsService = get()
+    val pictureService: PicturesService = get()
 
     post("/spot/create") {
         call.getResponseObject<SpotCreationDto>()?.let {
@@ -86,6 +89,23 @@ fun Route.spotsController() {
             text = "Error, id missing",
             status = HttpStatusCode.NotFound,
             contentType = ContentType.Text.Plain
+        )
+    }
+
+    get("/spot/{id}/pictures") {
+        val spotID = call.parameters["id"]
+        val page = call.request.queryParameters["page"]?.toInt()
+        val limit = call.request.queryParameters["limit"]?.toInt()
+        if (page == null || limit == null || spotID == null) {
+            throw MissingQueryParams("QueryParams 'page' and 'limit' are mandatory")
+        }
+
+        val response = pictureService.getPaginatedPicturesBySpot(spotID, page, limit)
+
+        call.respondText(
+            contentType = ContentType.Application.Json,
+            text = response,
+            status = HttpStatusCode.OK
         )
     }
 }

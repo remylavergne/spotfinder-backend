@@ -78,4 +78,12 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
             return File(it.path)
         }
     }
+
+    override fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): List<Picture> {
+        return databaseHelper.getPaginatedPicturesBySpot(id, page, limit)
+    }
+
+    override fun getPicturesCountBySpotId(id: String): Long {
+        return databaseHelper.getPicturesCountBySpot(id)
+    }
 }

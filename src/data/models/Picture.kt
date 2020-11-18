@@ -1,10 +1,11 @@
 package dev.remylavergne.spotfinder.data.models
 
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
 import java.io.File
 import java.util.UUID
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class Picture(
     val id: String,
     val createdAt: Long,
