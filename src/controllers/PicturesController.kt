@@ -1,6 +1,7 @@
 package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.services.PicturesService
+import dev.remylavergne.spotfinder.utils.exceptions.MissingQueryParams
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.ContentType
@@ -27,22 +28,6 @@ fun Route.picturesController() {
         pictureService.savePicture(call.receiveMultipart()).let { response ->
             call.respondText(text = response, status = HttpStatusCode.OK, contentType = ContentType.Text.Plain)
         }
-    }
-
-    get("/pictures/spot/{id}") {
-        call.parameters["id"]?.let { spotId ->
-            val picturesJson = pictureService.getPicturesBySpotId(spotId)
-            // Send
-            call.respondText(
-                contentType = ContentType.Application.Json,
-                text = picturesJson,
-                status = HttpStatusCode.OK
-            )
-        } ?: call.respondText(
-            text = "Error, id missing",
-            status = HttpStatusCode.NotFound,
-            contentType = ContentType.Text.Plain
-        )
     }
 
     /**

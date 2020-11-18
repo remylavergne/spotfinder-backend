@@ -111,7 +111,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
         return try {
-            collection.find(match(Picture::allowed eq true, Picture::spotId eq id))
+            collection.find(Picture::allowed eq true, Picture::spotId eq id)
                 .descendingSort(Picture::createdAt)
                 .skip((page - 1) * limit)
                 .limit(limit)
@@ -121,12 +121,11 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
-    // TODO: A tester !
     override fun getPicturesCountBySpot(id: String): Long {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
         return try {
-            collection.find(match(Picture::allowed eq true, Picture::spotId eq id)).count().toLong()
+            collection.find(Picture::allowed eq true, Picture::spotId eq id).count().toLong()
         } catch (e: Exception) {
             0
         }
@@ -216,7 +215,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         return try {
             val spot = collection.findOne(Spot::id eq picture.spotId)
             return when {
-                spot == null ->  false
+                spot == null -> false
                 spot.pictureId == null -> {
                     collection.updateOne(Spot::id eq picture.spotId, setValue(Spot::pictureId, picture.id))
                     true

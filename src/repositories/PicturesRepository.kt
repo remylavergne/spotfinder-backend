@@ -9,4 +9,6 @@ interface PicturesRepository {
     fun persistPicture(picture: File): Picture
     fun getPicturesBySpotId(id: String): List<Picture>
     fun getStaticPictureFile(pictureId: String): File?
+    fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): List<Picture>
+    fun getPicturesCountBySpotId(id: String): Long
 }
