@@ -228,4 +228,36 @@ class DatabaseHelperImpl : DatabaseHelper {
             false
         }
     }
+
+    override fun getSpotWithoutAddresses(): List<Spot> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection.find(Spot::address eq null).toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override fun updateSpotAddress(spot: Spot): Spot {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection.updateOne(Spot::id eq spot.id, setValue(Spot::address, spot.address))
+            spot
+        } catch (e: Exception) {
+            spot
+        }
+    }
+
+    override fun updateSpotName(spot: Spot): Spot {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection.updateOne(Spot::id eq spot.id, setValue(Spot::name, spot.name))
+            spot
+        } catch (e: Exception) {
+            spot
+        }
+    }
 }

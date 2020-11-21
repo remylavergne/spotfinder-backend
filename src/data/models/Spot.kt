@@ -33,4 +33,13 @@ data class Spot(
             )
         }
     }
+
+    fun updatePosition(infos: GeolocationInfos): Spot {
+        return this.apply {
+            if (infos.name !== null && name != null) {
+                name = infos.name
+            }
+            address = infos.display_name
+        }
+    }
 }
