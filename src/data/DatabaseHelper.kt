@@ -12,6 +12,9 @@ interface DatabaseHelper {
     fun getSpotsByRider(id: String): List<Spot>
     fun getSpotsByCountry(country: String): List<Spot>
     fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot>
+    fun getSpotWithoutAddresses(): List<Spot>
+    fun updateSpotAddress(spot: Spot): Spot
+    fun updateSpotName(spot: Spot): Spot
 
     /**
      * Get Spot allowed documents total number
