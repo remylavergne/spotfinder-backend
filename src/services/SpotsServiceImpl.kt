@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.services
 
+import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.controllers.dto.Pagination
 import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
@@ -63,5 +64,19 @@ class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsServ
 
     override fun getSpotsCount(): Long {
         return spotsRepository.getSpotsCount()
+    }
+
+    override fun getSpotsNearestTo(position: Position, page: Int, limit: Int): String {
+        val spots = spotsRepository.getSpotsNearestTo(position, page, limit)
+
+        val totalSpots = getSpotsCount()
+
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = spots,
+            pagination = Pagination(currentPage = page, itemsPerPages = spots.count(), totalItems = totalSpots)
+        )
+
+        return MoshiHelper.wrapperToJson(response)
     }
 }

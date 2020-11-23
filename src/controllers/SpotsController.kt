@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.controllers
 
+import dev.remylavergne.spotfinder.controllers.dto.Position
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
 import dev.remylavergne.spotfinder.services.PicturesService
 import dev.remylavergne.spotfinder.services.SpotsService
@@ -10,6 +11,7 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.get
+import com.mongodb.client.model.geojson.Position as PositionMongo
 
 fun Route.spotsController() {
 
@@ -107,5 +109,24 @@ fun Route.spotsController() {
             text = response,
             status = HttpStatusCode.OK
         )
+    }
+
+    post("/spots/nearest") {
+        call.getResponseObject<Position>()?.let {
+            val page = call.request.queryParameters["page"]?.toInt()
+            val limit = call.request.queryParameters["limit"]?.toInt()
+            if (page == null || limit == null) {
+                throw MissingQueryParams("QueryParams 'page' and 'limit' are mandatory")
+            }
+
+            val response =
+                spotsService.getSpotsNearestTo(PositionMongo(it.longitude, it.latitude), page, limit)
+
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = response,
+                status = HttpStatusCode.OK
+            )
+        }
     }
 }

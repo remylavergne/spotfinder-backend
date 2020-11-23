@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.services
 
+import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
 import dev.remylavergne.spotfinder.data.models.Spot
@@ -13,4 +14,5 @@ interface SpotsService {
     fun getSpotsByCountry(country: String): String
     fun getLatestPaginatedSpots(queryParams: Parameters): String
     fun getSpotsCount(): Long
+    fun getSpotsNearestTo(position: Position, page: Int, limit: Int): String
 }

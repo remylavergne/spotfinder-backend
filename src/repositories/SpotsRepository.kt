@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.repositories
 
+import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 
@@ -12,4 +13,5 @@ interface SpotsRepository {
     fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot>
     fun getSpotsCount(): Long
     fun updatePictureId(picture: Picture): Boolean
+    fun getSpotsNearestTo(position: Position, page: Int, limit: Int): List<Spot>
 }

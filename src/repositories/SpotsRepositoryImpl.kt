@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.repositories
 
+import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.data.DatabaseHelper
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
@@ -18,7 +19,7 @@ class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRep
     }
 
     override fun getSpotsByRider(id: String): List<Spot> {
-       return databaseHelper.getSpotsByRider(id)
+        return databaseHelper.getSpotsByRider(id)
     }
 
     override fun getSpotsByCountry(country: String): List<Spot> {
@@ -35,5 +36,9 @@ class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRep
 
     override fun updatePictureId(picture: Picture): Boolean {
         return databaseHelper.updatePictureId(picture)
+    }
+
+    override fun getSpotsNearestTo(position: Position, page: Int, limit: Int): List<Spot> {
+        return databaseHelper.getSpotsNearestTo(position, page, limit)
     }
 }
