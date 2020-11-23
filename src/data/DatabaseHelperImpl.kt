@@ -1,11 +1,15 @@
 package dev.remylavergne.spotfinder.data
 
+import com.mongodb.client.model.Filters.near
+import com.mongodb.client.model.geojson.Point
+import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.*
 import org.bson.conversions.Bson
 import org.litote.kmongo.*
+
 
 @KtorExperimentalAPI
 class DatabaseHelperImpl : DatabaseHelper {
@@ -258,6 +262,23 @@ class DatabaseHelperImpl : DatabaseHelper {
             spot
         } catch (e: Exception) {
             spot
+        }
+    }
+
+    override fun getSpotsNearestTo(position: Position, page: Int, limit: Int): List<Spot> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+
+        return try {
+            val query: Bson = near("location", Point(position), null, null)
+
+            collection.find(query)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            println(e)
+            emptyList()
         }
     }
 }

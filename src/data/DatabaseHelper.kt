@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.data
 
+import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
@@ -15,6 +16,7 @@ interface DatabaseHelper {
     fun getSpotWithoutAddresses(): List<Spot>
     fun updateSpotAddress(spot: Spot): Spot
     fun updateSpotName(spot: Spot): Spot
+    fun getSpotsNearestTo(position: Position, page: Int, limit: Int): List<Spot>
 
     /**
      * Get Spot allowed documents total number

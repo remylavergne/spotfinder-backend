@@ -12,8 +12,7 @@ data class Spot(
     var address: String? = null,
     var country: String? = null,
     var pictureId: String? = null,
-    var longitude: Double,
-    var latitude: Double,
+    var location: GeoJSON,
     var creationDate: Long,
     var modificationDate: Long,
     var allowed: Boolean,
@@ -24,8 +23,7 @@ data class Spot(
             return Spot(
                 id = UUID.randomUUID().toString(),
                 name = dto.name,
-                longitude = dto.longitude,
-                latitude = dto.latitude,
+                location = GeoJSON(coordinates = listOf(dto.longitude, dto.latitude)),
                 creationDate = System.currentTimeMillis(),
                 modificationDate = System.currentTimeMillis(),
                 allowed = false, // By default any data aren't public
@@ -39,7 +37,17 @@ data class Spot(
             if (infos.name !== null && name != null) {
                 name = infos.name
             }
-            address = infos.display_name
+            if (infos.display_name != null) {
+                address = infos.display_name
+            }
         }
+    }
+
+    fun getLongitude(): Double {
+        return this.location.coordinates[0]
+    }
+
+    fun getLatitude(): Double {
+        return this.location.coordinates[1]
     }
 }

@@ -21,7 +21,9 @@ import org.slf4j.event.Level
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.request.path
 import io.ktor.response.*
+import io.ktor.util.*
 
+@KtorExperimentalAPI
 fun Application.loadModules() {
     install(Koin) {
         modules(mainModule, toolsModule)

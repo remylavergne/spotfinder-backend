@@ -33,7 +33,7 @@ object SpotLocationUpdater {
                 spots.forEach { spot: Spot ->
                     try {
                         val response: String =
-                            client.get("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${spot.latitude}&lon=${spot.longitude}&addressdetails=0")
+                            client.get("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${spot.getLatitude()}&lon=${spot.getLongitude()}&addressdetails=0")
                         MoshiHelper.fromJson<GeolocationInfos>(response)?.let { geolocationInfos ->
                             databaseHelper.updateSpotAddress(spot.updatePosition(geolocationInfos))
                             if (nameHaveToBeUpdate(spot, geolocationInfos)) {
