@@ -11,8 +11,10 @@ import io.ktor.auth.*
 import kotlin.test.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
+import kotlin.time.ExperimentalTime
 
 class ApplicationTest {
+    @ExperimentalTime
     @KtorExperimentalAPI
     @Test
     fun testRoot() {
