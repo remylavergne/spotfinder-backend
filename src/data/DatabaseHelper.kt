@@ -17,6 +17,7 @@ interface DatabaseHelper {
     fun updateSpotAddress(spot: Spot): Spot
     fun updateSpotName(spot: Spot): Spot
     fun getSpotsNearestTo(position: Position, page: Int, limit: Int): List<Spot>
+    fun searchSpots(term: String): List<Spot>
 
     /**
      * Get Spot allowed documents total number

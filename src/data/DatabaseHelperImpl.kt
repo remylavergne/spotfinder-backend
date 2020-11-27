@@ -272,12 +272,25 @@ class DatabaseHelperImpl : DatabaseHelper {
         return try {
             val query: Bson = near("location", Point(position), null, null)
 
-            collection.find(query)
+            collection.find(query, Spot::allowed eq true)
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .toList()
         } catch (e: Exception) {
             println(e)
+            emptyList()
+        }
+    }
+
+    override fun searchSpots(term: String): List<Spot> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+
+        return try {
+            val query: Bson = text(term) // TODO -> Case sensitive ?
+
+            collection.find(Spot::allowed eq true, query).toList()
+        } catch (e: Exception) {
             emptyList()
         }
     }
