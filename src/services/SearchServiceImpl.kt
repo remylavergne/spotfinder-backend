@@ -1,4 +1,6 @@
 package dev.remylavergne.spotfinder.services
 
-class SearchServiceImpl {
+import dev.remylavergne.spotfinder.repositories.SearchRepository
+
+class SearchServiceImpl(private val searchRepository: SearchRepository): SearchService {
 }

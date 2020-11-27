@@ -13,10 +13,12 @@ val mainModule = module(createdAtStart = true) {
     single<PicturesService> { PicturesServiceImpl(get(), get()) }
     single<SpotsService> { SpotsServiceImpl(get()) }
     single<UserService> { UserServiceImpl(get()) }
+    single<SearchService> { SearchServiceImpl(get()) }
     // Repositories
     single<PicturesRepository> { PicturesRepositoryImpl(get()) }
     single<SpotsRepository> { SpotsRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
+    single<SearchRepository> { SearchRepositoryImpl(get()) }
     // Database
     single<DatabaseHelper> { DatabaseHelperImpl() }
 }

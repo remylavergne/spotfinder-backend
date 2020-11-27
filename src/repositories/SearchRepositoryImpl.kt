@@ -1,4 +1,7 @@
 package dev.remylavergne.spotfinder.repositories
 
-class SearchRepositoryImpl {
+import dev.remylavergne.spotfinder.data.DatabaseHelper
+
+class SearchRepositoryImpl(private val databaseHelper: DatabaseHelper): SearchRepository {
+
 }
