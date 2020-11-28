@@ -3,6 +3,8 @@ package dev.remylavergne.spotfinder.data
 import com.mongodb.client.model.Filters.near
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
+import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
+import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
@@ -296,6 +298,25 @@ class DatabaseHelperImpl : DatabaseHelper {
             collection.find(Spot::allowed eq true, query).toList()
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    override fun addCommentToComment(data: Comment): Comment? {
+        TODO("Not yet implemented")
+    }
+
+    override fun addCommentToPicture(data: Comment): Comment? {
+        TODO("Not yet implemented")
+    }
+
+    override fun addCommentToSpot(data: Comment): Comment? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection.insertOne(data)
+            data
+        } catch (e: Exception) {
+            null
         }
     }
 }
