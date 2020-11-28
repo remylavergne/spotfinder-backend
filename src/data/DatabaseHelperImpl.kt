@@ -3,6 +3,8 @@ package dev.remylavergne.spotfinder.data
 import com.mongodb.client.model.Filters.near
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
+import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
+import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
@@ -294,6 +296,73 @@ class DatabaseHelperImpl : DatabaseHelper {
             val query: Bson = text(term) // TODO -> Case sensitive ?
 
             collection.find(Spot::allowed eq true, query).toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override fun addComment(data: Comment): Comment? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection.insertOne(data)
+            data
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override fun getSpotComments(id: String, page: Int, limit: Int): List<Comment> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection
+                .find(Comment::allowed eq true, Comment::spotId eq id)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override fun getPictureComments(id: String, page: Int, limit: Int): List<Comment> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection
+                .find(Comment::allowed eq true, Comment::pictureId eq id)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override fun getCommentComments(id: String, page: Int, limit: Int): List<Comment> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection
+                .find(Comment::allowed eq true, Comment::commentId eq id)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override fun getUserComments(id: String, page: Int, limit: Int): List<Comment> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection
+                .find(Comment::allowed eq true, Comment::userId eq id)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
         } catch (e: Exception) {
             emptyList()
         }

@@ -1,7 +1,9 @@
 package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.controllers.dto.Position
+import dev.remylavergne.spotfinder.controllers.dto.SearchCommentsDto
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
+import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.PicturesService
 import dev.remylavergne.spotfinder.services.SpotsService
 import dev.remylavergne.spotfinder.utils.exceptions.MissingQueryParams
@@ -17,6 +19,7 @@ fun Route.spotsController() {
 
     val spotsService: SpotsService = get()
     val pictureService: PicturesService = get()
+    val commentsService: CommentsService = get()
 
     post("/spot/create") {
         call.getResponseObject<SpotCreationDto>()?.let {
@@ -128,5 +131,23 @@ fun Route.spotsController() {
                 status = HttpStatusCode.OK
             )
         }
+    }
+
+    get("/spot/{id}/comments") {
+        val id = call.parameters["id"]
+        val page = call.request.queryParameters["page"]?.toInt()
+        val limit = call.request.queryParameters["limit"]?.toInt()
+
+        if (page == null || limit == null) {
+            throw Exception("missing pagination infos") // TODO: New Exception for this
+        }
+
+        val response = commentsService.getComments(SearchCommentsDto(spotId = id), page, limit)
+
+        call.respondText(
+            contentType = ContentType.Application.Json,
+            text = response,
+            status = HttpStatusCode.OK
+        )
     }
 }

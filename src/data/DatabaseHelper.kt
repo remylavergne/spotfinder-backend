@@ -1,6 +1,8 @@
 package dev.remylavergne.spotfinder.data
 
 import com.mongodb.client.model.geojson.Position
+import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
+import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
@@ -58,4 +60,11 @@ interface DatabaseHelper {
     fun getUserById(id: String): User?
     fun createUser(user: User): Boolean
     fun updatePictureId(picture: Picture): Boolean
+
+    // Comments
+    fun addComment(data: Comment): Comment?
+    fun getSpotComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getPictureComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getCommentComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getUserComments(id: String, page: Int, limit: Int): List<Comment>
 }

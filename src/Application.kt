@@ -33,6 +33,7 @@ fun Application.module(testing: Boolean = false) {
         spotsController()
         picturesController()
         searchController()
+        commentsController()
         metricsController()
         // Authentication
         authenticate("myBasicAuth") {
