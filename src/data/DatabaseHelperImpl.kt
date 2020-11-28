@@ -316,11 +316,12 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
         return try {
-            collection
-                .find(Comment::allowed eq true, Comment::spotId eq id)
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .toList()
+            val query: Bson = lookup(SpotfinderCollections.USERS.value, "userId", "id", "user")
+            val match: Bson = match(Comment::allowed eq true, Comment::spotId eq id)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(query, match, skip, limite)).toList()
         } catch (e: Exception) {
             emptyList()
         }
@@ -330,11 +331,12 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
         return try {
-            collection
-                .find(Comment::allowed eq true, Comment::pictureId eq id)
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .toList()
+            val query: Bson = lookup(SpotfinderCollections.USERS.value, "userId", "id", "user")
+            val match: Bson = match(Comment::allowed eq true, Comment::pictureId eq id)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(query, match, skip, limite)).toList()
         } catch (e: Exception) {
             emptyList()
         }
@@ -344,11 +346,12 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
         return try {
-            collection
-                .find(Comment::allowed eq true, Comment::commentId eq id)
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .toList()
+            val query: Bson = lookup(SpotfinderCollections.USERS.value, "userId", "id", "user")
+            val match: Bson = match(Comment::allowed eq true, Comment::commentId eq id)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(query, match, skip, limite)).toList()
         } catch (e: Exception) {
             emptyList()
         }
@@ -358,11 +361,12 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
         return try {
-            collection
-                .find(Comment::allowed eq true, Comment::userId eq id)
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .toList()
+            val query: Bson = lookup(SpotfinderCollections.USERS.value, "userId", "id", "user")
+            val match: Bson = match(Comment::allowed eq true, Comment::userId eq id)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(query, match, skip, limite)).toList()
         } catch (e: Exception) {
             emptyList()
         }
