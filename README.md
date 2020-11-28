@@ -34,6 +34,26 @@ Enter password:
 > db.spots.createIndex({"location":"2dsphere"})
 ```
 
+## Indexs nécessaires
+
+### Users
+
+```javascript
+{
+    "username": "text"
+}
+```
+
+### Spots
+
+```javascript
+{
+    "location": "2dsphere",
+    "address": "text",
+    "name": "text"
+}
+```
+
 # API definition
 
 In progress...
