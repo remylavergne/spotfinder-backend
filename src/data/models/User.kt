@@ -9,6 +9,7 @@ data class User(
     val createdAt: Long,
     var lastConnexion: Long,
     val username: String,
+    val pictureId: String? = null,
     val spots: List<String> = listOf(),
     val pictures: List<String> = listOf()
 ) {

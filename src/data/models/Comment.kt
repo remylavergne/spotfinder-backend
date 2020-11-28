@@ -15,7 +15,8 @@ data class Comment(
     val spotId: String? = null,
     val pictureId: String? = null,
     val commentId: String? = null,
-    val child: Boolean = false
+    val child: Boolean = false,
+    val user: List<User> = emptyList()
 ) {
     companion object {
         fun fromCreationDto(dto: CreateCommentDto): Comment {
