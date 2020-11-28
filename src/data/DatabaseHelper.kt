@@ -60,7 +60,11 @@ interface DatabaseHelper {
     fun getUserById(id: String): User?
     fun createUser(user: User): Boolean
     fun updatePictureId(picture: Picture): Boolean
-    fun addCommentToComment(data: Comment): Comment?
-    fun addCommentToPicture(data: Comment): Comment?
-    fun addCommentToSpot(data: Comment): Comment?
+
+    // Comments
+    fun addComment(data: Comment): Comment?
+    fun getSpotComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getPictureComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getCommentComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getUserComments(id: String, page: Int, limit: Int): List<Comment>
 }
