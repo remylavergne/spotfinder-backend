@@ -167,10 +167,14 @@ class DatabaseHelperImpl : DatabaseHelper {
     override fun isUsernameExist(username: String): Boolean {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
-        val existingUsernames = collection.distinct(User::username).filterNotNull().map { it.toLowerCase() }
-        val isUsernameAlreadyExist = existingUsernames.find { it == username.toLowerCase() }
 
-        return !isUsernameAlreadyExist.isNullOrEmpty()
+        return try {
+            val query = text(username)
+            val user = collection.findOne(query)
+            user != null
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override fun getUserByUsername(username: String): User? {
