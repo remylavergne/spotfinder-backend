@@ -1,9 +1,11 @@
 package dev.remylavergne.spotfinder.controllers
 
+import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchCommentsDto
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.UserService
+import dev.remylavergne.spotfinder.utils.getResponseObject
 import io.ktor.application.call
 import io.ktor.http.*
 import io.ktor.request.*
@@ -60,29 +62,27 @@ fun Route.usersController() {
         }
     }
 
-    post("/user/connect") {
-        val id = call.receive<String>()
-        if (id.isEmpty()) {
-            throw Exception("Id must not be empty")
-        }
+    post("/user/retrieve-account") {
+        call.getResponseObject<RetrieveAccountDto>()?.let {
+            val user: String? = userService.retrieveAccount(it)
 
-        val user = userService.getUser(id = id, username = null)
+            if (user == null) {
+                call.respondText(
+                    text = "Can't retrieve account",
+                    status = HttpStatusCode.NotFound,
+                    contentType = ContentType.Text.Plain
+                )
+            } else {
+                call.respondText(
+                    text = user,
+                    status = HttpStatusCode.OK,
+                    contentType = ContentType.Text.Plain
+                )
+            }
 
-        if (user == null) {
-            call.respondText(
-                text = "User doesn't exist",
-                status = HttpStatusCode.NotFound,
-                contentType = ContentType.Text.Plain
-            )
-        } else {
-            call.respondText(
-                text = user,
-                status = HttpStatusCode.OK,
-                contentType = ContentType.Text.Plain
-            )
-        }
+        } ?: call.respond(HttpStatusCode.BadRequest)
     }
-
+    
     post("/user/log/{id}") {
         userService.logUserConnection(call.parameters)
         call.respondText(
