@@ -183,14 +183,8 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
         return try {
-            val existingUsernames = collection.distinct(User::username).filterNotNull().map { it.toLowerCase() }
-            val isUsernameAlreadyExist = existingUsernames.find { it == username.toLowerCase() }
-
-            return if (isUsernameAlreadyExist.isNullOrEmpty()) {
-                null
-            } else {
-                collection.findOne(User::username eq username)
-            }
+            val query = text(username)
+            collection.findOne(query)
         } catch (e: Exception) {
             println(e)
             null
