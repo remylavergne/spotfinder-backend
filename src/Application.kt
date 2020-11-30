@@ -3,6 +3,7 @@ package dev.remylavergne.spotfinder
 import dev.remylavergne.spotfinder.controllers.*
 import dev.remylavergne.spotfinder.data.DatabaseProvider
 import dev.remylavergne.spotfinder.data.FileHelper
+import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.data.SpotLocationUpdater
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -22,6 +23,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+    JWTTool.init(environment)
     loadModules()
     FileHelper.getUploadDir(environment)
     DatabaseProvider.initialize(this)
@@ -32,15 +34,10 @@ fun Application.module(testing: Boolean = false) {
         usersController()
         spotsController()
         picturesController()
-        searchController()
+        authenticate {
+            searchController()
+        }
         commentsController()
         metricsController()
-        // Authentication
-        authenticate("myBasicAuth") {
-            get("/protected/route/basic") {
-                val principal = call.principal<UserIdPrincipal>()!!
-                call.respondText("Hello ${principal.name}")
-            }
-        }
     }
 }
