@@ -1,10 +1,12 @@
 package dev.remylavergne.spotfinder
 
+import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.injection.mainModule
 import dev.remylavergne.spotfinder.injection.toolsModule
 import dev.remylavergne.spotfinder.utils.exceptions.MissingQueryParams
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
@@ -46,8 +48,6 @@ fun Application.loadModules() {
         }
     }
 
-    // install(AutoHeadResponse)
-
     install(CallLogging) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }
@@ -58,9 +58,16 @@ fun Application.loadModules() {
     }
 
     install(Authentication) {
-        basic("myBasicAuth") {
-            realm = "Ktor Server"
-            validate { if (it.name == "test" && it.password == "password") UserIdPrincipal(it.name) else null }
+           jwt {
+            realm = JWTTool.jwtRealm
+            verifier(JWTTool.makeJwtVerifier(JWTTool.jwtIssuer, JWTTool.jwtAudience))
+            validate { credential ->
+                if (credential.payload.audience.contains(JWTTool.jwtAudience)) {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
+            }
         }
     }
 

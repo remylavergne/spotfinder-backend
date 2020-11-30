@@ -1,6 +1,7 @@
 package dev.remylavergne.spotfinder.data.models
 
 import com.squareup.moshi.JsonClass
+import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.utils.PasswordTools
 import java.util.*
 
@@ -13,8 +14,10 @@ data class User(
     val password: String?,
     val pictureId: String? = null,
     val spots: List<String> = listOf(),
-    val pictures: List<String> = listOf()
+    val pictures: List<String> = listOf(),
+    var token: String? = null
 ) {
+
     companion object {
         fun create(username: String): User {
             val id = UUID.randomUUID().toString().split("-")[0]
