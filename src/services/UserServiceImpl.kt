@@ -7,6 +7,7 @@ import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.repositories.UserRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
+import dev.remylavergne.spotfinder.utils.PasswordTools
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
@@ -44,10 +45,13 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
     }
 
     override fun createUser(username: String): String? {
-        val newUser = User.create(username)
+        val randomPassword = PasswordTools.generatePassword()
+        val newUser = User.create(username, randomPassword)
         val result = userRepository.insertUser(newUser)
         return if (result) {
-            MoshiHelper.toJson(newUser)
+            val token = JWTTool.makeToken(newUser)
+            val dto = newUser.toNewAccountDto(randomPassword, token)
+            MoshiHelper.toJson(dto)
         } else {
             null
         }
