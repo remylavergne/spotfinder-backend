@@ -23,6 +23,7 @@ import org.slf4j.event.Level
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.request.path
 import io.ktor.response.*
+import io.ktor.serialization.*
 import io.ktor.util.*
 
 @KtorExperimentalAPI
@@ -54,7 +55,8 @@ fun Application.loadModules() {
     }
 
     install(DefaultHeaders) {
-        header("X-Engine", "Ktor") // will send this header with each response
+        header("X-Engine", "Ktor")
+        header("App", "SpotFinder")
     }
 
     install(Authentication) {
