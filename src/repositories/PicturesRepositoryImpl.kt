@@ -3,8 +3,13 @@ package dev.remylavergne.spotfinder.repositories
 import dev.remylavergne.spotfinder.data.DatabaseHelper
 import dev.remylavergne.spotfinder.data.FileHelper
 import dev.remylavergne.spotfinder.data.models.Picture
+import dev.remylavergne.spotfinder.utils.removeExtension
 import io.ktor.http.content.PartData
 import io.ktor.http.content.streamProvider
+import net.coobird.thumbnailator.Thumbnails
+import net.coobird.thumbnailator.geometry.Position
+import net.coobird.thumbnailator.geometry.Positions
+import net.coobird.thumbnailator.name.Rename
 import java.io.File
 
 class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : PicturesRepository {
@@ -62,10 +67,30 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
         return picture
     }
 
+    override fun createThumbnail(pictureFile: File): File {
+        val extension = ".jpg"
+        val pathParts = pictureFile.path.split("/").toMutableList()
+        val newFileName = "thumbnail_${pathParts[2]}"
+        pathParts[2] = newFileName
+        val finalPath = pathParts.joinToString("/").removeExtension()
+        val outputFile = File("$finalPath$extension")
+
+        Thumbnails.of(pictureFile)
+            .size(200, 200)
+            .keepAspectRatio(true)
+            .crop(Positions.CENTER)
+            .outputFormat("jpg")
+            .toFile(outputFile)
+
+        return outputFile
+    }
+
     override fun persistPicture(picture: File): Picture {
-        val newPicture = Picture.fromFile(picture, FileHelper.uploadDir.path)
-        databaseHelper.persistPicture(newPicture)
-        return newPicture
+        val thumbnailFile: File = this.createThumbnail(picture)
+        val pictures = Picture.fromFile(picture, thumbnailFile, FileHelper.uploadDir.path)
+        databaseHelper.persistPicture(pictures.picture)
+        databaseHelper.persistPicture(pictures.thumbnail)
+        return pictures.picture
     }
 
     override fun getPicturesBySpotId(id: String): List<Picture> {

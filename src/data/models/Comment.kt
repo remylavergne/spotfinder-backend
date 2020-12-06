@@ -11,7 +11,7 @@ data class Comment(
     val createdAt: Long,
     val message: String,
     val userId: String,
-    val allowed: Boolean = false,
+    val allowed: Boolean = true,
     val spotId: String? = null,
     val pictureId: String? = null,
     val commentId: String? = null,

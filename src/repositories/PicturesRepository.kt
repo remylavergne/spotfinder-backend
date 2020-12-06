@@ -11,4 +11,5 @@ interface PicturesRepository {
     fun getStaticPictureFile(pictureId: String): File?
     fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): List<Picture>
     fun getPicturesCountBySpotId(id: String): Long
+    fun createThumbnail(pictureFile: File): File
 }

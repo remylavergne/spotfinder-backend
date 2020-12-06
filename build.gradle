@@ -79,6 +79,9 @@ dependencies {
     compile 'io.micrometer:micrometer-registry-prometheus:1.5.5'
     implementation 'id.zelory:compressor:3.0.0'
     implementation 'de.mkammerer:argon2-jvm:2.7'
+    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.13'
+
 
     // Unit tests
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
