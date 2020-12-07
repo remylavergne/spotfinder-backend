@@ -13,21 +13,33 @@ data class Picture(
     val path: String,
     val spotId: String,
     val userId: String,
-    val allowed: Boolean
+    val allowed: Boolean = false,
+    val isThumbnail: Boolean = false
 ) {
     companion object {
-        fun fromFile(f: File, uploadDirBase: String): Picture {
-            val infos = extractInfos(f.nameWithoutExtension)
-
-            return Picture(
+        fun fromFile(pictureFile: File, thumbnailFile: File, uploadDirBase: String): PictureWithThumbnail {
+            val infos = extractInfos(pictureFile.nameWithoutExtension)
+            val picture = Picture(
                 id = UUID.randomUUID().toString(),
                 createdAt = System.currentTimeMillis(),
-                filename = f.name,
-                path = "$uploadDirBase/${infos.spotId}/${f.name}",
+                filename = pictureFile.name,
+                path = "$uploadDirBase/${infos.spotId}/${pictureFile.name}",
                 spotId = infos.spotId,
                 userId = infos.userId,
                 allowed = false
             )
+            val thumbnail = Picture(
+                id = "thumbnail_${picture.id}",
+                createdAt = picture.createdAt,
+                filename = pictureFile.name,
+                path = thumbnailFile.path,
+                spotId = infos.spotId,
+                userId = infos.userId,
+                allowed = false,
+                isThumbnail = true
+            )
+
+            return PictureWithThumbnail(picture, thumbnail)
         }
 
         /**
@@ -44,3 +56,8 @@ data class Picture(
         var userId: String
     )
 }
+
+data class PictureWithThumbnail(
+    val picture: Picture,
+    val thumbnail: Picture
+)

@@ -26,6 +26,7 @@ Ou via le docker :
 # Se connecter au docker
 docker exec -it mongo-spotfinder bash
 # Commande MongoDB
+$ mongo
 > use admin
 switched to db admin
 > db.auth("root", passwordPrompt())

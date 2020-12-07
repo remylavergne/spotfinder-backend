@@ -9,6 +9,7 @@ import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
 import io.ktor.util.*
+import org.bson.Document
 import org.bson.conversions.Bson
 import org.litote.kmongo.*
 
@@ -117,7 +118,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
         return try {
-            collection.find(Picture::allowed eq true, Picture::spotId eq id)
+            collection.find(Picture::allowed eq true, Picture::isThumbnail eq false, Picture::spotId eq id)
                 .descendingSort(Picture::createdAt)
                 .skip((page - 1) * limit)
                 .limit(limit)
@@ -312,10 +313,11 @@ class DatabaseHelperImpl : DatabaseHelper {
         return try {
             val query: Bson = lookup(SpotfinderCollections.USERS.value, "userId", "id", "user")
             val match: Bson = match(Comment::allowed eq true, Comment::spotId eq id)
+            val sort: Bson = sort(Document("createdAt", -1))
             val skip: Bson = skip((page - 1) * limit)
             val limite: Bson = limit(limit)
 
-            collection.aggregate(listOf(query, match, skip, limite)).toList()
+            collection.aggregate(listOf(query, match, sort, skip, limite)).toList()
         } catch (e: Exception) {
             emptyList()
         }
