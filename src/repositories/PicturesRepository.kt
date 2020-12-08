@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.repositories
 
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.models.Picture
 import io.ktor.http.content.PartData
 import java.io.File

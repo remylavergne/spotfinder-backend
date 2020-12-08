@@ -1,6 +1,8 @@
 package dev.remylavergne.spotfinder.repositories
 
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
+import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.User
 
 interface UserRepository {
@@ -8,4 +10,5 @@ interface UserRepository {
     fun getUser(id: String?, username: String?): User?
     fun insertUser(newUser: User): Boolean
     fun retrieveAccount(credentials: RetrieveAccountDto): User?
+    fun getPictures(query: SearchWithPaginationDto): List<Picture>
 }

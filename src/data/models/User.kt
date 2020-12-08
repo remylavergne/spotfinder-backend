@@ -12,7 +12,7 @@ data class User(
     val createdAt: Long,
     var lastConnexion: Long,
     val username: String,
-    val password: String?,
+    var password: String?,
     val pictureId: String? = null,
     val spots: List<String> = listOf(),
     val pictures: List<String> = listOf(),

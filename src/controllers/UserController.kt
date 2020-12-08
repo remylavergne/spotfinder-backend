@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchCommentsDto
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.UserService
@@ -21,21 +22,15 @@ fun Route.usersController() {
     val userService: UserService = get()
     val commentsService: CommentsService = get()
 
-    get("/user") {
-        val queryParams: Parameters = call.request.queryParameters
-        val username = queryParams["username"]
-        val id = queryParams["id"]
-        // Check validity
-        if (username == null && id == null) {
-            throw Exception("Missing username or id")
-        }
-        // Process call
-        userService.getUser(id, username)?.let { response ->
-            call.respondText(
-                text = response,
-                status = HttpStatusCode.OK,
-                contentType = ContentType.Text.Plain
-            )
+    post("/user") {
+        call.receive<String>()?.let {
+            userService.getUser(it, null)?.let { response ->
+                call.respondText(
+                    text = response,
+                    status = HttpStatusCode.OK,
+                    contentType = ContentType.Text.Plain
+                )
+            } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
         } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
     }
 
@@ -82,7 +77,7 @@ fun Route.usersController() {
 
         } ?: call.respond(HttpStatusCode.BadRequest)
     }
-    
+
     post("/user/log/{id}") {
         userService.logUserConnection(call.parameters)
         call.respondText(
@@ -108,5 +103,17 @@ fun Route.usersController() {
             text = response,
             status = HttpStatusCode.OK
         )
+    }
+
+    post("/user/pictures") {
+        call.getResponseObject<SearchWithPaginationDto>()?.let {
+            val pictures: String = userService.getPictures(it)
+
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = pictures,
+                status = HttpStatusCode.OK
+            )
+        } ?: call.respond(HttpStatusCode.BadRequest)
     }
 }

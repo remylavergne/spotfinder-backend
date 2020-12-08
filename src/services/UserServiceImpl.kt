@@ -3,7 +3,9 @@ package dev.remylavergne.spotfinder.services
 import dev.remylavergne.spotfinder.controllers.dto.Pagination
 import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.JWTTool
+import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.repositories.UserRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
@@ -55,5 +57,22 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         } else {
             null
         }
+    }
+
+    override fun getPictures(query: SearchWithPaginationDto): String {
+        val pictures: List<Picture> = userRepository.getPictures(query)
+
+        // Wrapper
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = pictures,
+            pagination = Pagination(
+                currentPage = query.page,
+                itemsPerPages = query.limit,
+                totalItems = 9999
+            ) // TODO: Get count
+        )
+
+        return MoshiHelper.wrapperToJson(response)
     }
 }

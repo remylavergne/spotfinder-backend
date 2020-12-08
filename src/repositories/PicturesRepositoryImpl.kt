@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.repositories
 
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.DatabaseHelper
 import dev.remylavergne.spotfinder.data.FileHelper
 import dev.remylavergne.spotfinder.data.models.Picture
@@ -7,9 +8,7 @@ import dev.remylavergne.spotfinder.utils.removeExtension
 import io.ktor.http.content.PartData
 import io.ktor.http.content.streamProvider
 import net.coobird.thumbnailator.Thumbnails
-import net.coobird.thumbnailator.geometry.Position
 import net.coobird.thumbnailator.geometry.Positions
-import net.coobird.thumbnailator.name.Rename
 import java.io.File
 
 class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : PicturesRepository {

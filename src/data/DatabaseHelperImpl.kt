@@ -367,4 +367,18 @@ class DatabaseHelperImpl : DatabaseHelper {
             emptyList()
         }
     }
+
+    override fun getUserPictures(userId: String, page: Int, limit: Int): List<Picture> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            val match: Bson = match(Picture::allowed eq true, Picture::isThumbnail eq false, Picture::userId eq userId)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(match, skip, limite)).toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 }

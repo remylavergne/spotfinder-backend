@@ -32,6 +32,7 @@ interface DatabaseHelper {
     fun getPicturesBySpotId(id: String): List<Picture>
     fun getPictureById(id: String): Picture?
     fun getPicturesByRiderId(id: String): List<Picture>
+    fun getUserPictures(userId: String, page: Int, limit: Int): List<Picture>
 
     /**
      * Get Pictures for a specific Spot with Pagination
