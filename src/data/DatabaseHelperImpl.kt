@@ -381,4 +381,18 @@ class DatabaseHelperImpl : DatabaseHelper {
             emptyList()
         }
     }
+
+    override fun getUserSpots(id: String, page: Int, limit: Int): List<Spot> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            val match: Bson = match(Spot::allowed eq true, Spot::user eq id)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(match, skip, limite)).toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 }

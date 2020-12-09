@@ -5,7 +5,9 @@ import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.JWTTool
+import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
+import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.repositories.UserRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
@@ -66,6 +68,40 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         val response = ResultWrapper(
             statusCode = HttpStatusCode.OK.value,
             result = pictures,
+            pagination = Pagination(
+                currentPage = query.page,
+                itemsPerPages = query.limit,
+                totalItems = 9999
+            ) // TODO: Get count
+        )
+
+        return MoshiHelper.wrapperToJson(response)
+    }
+
+    override fun getComments(query: SearchWithPaginationDto): String {
+        val comments: List<Comment> = userRepository.getComments(query)
+
+        // Wrapper
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = comments,
+            pagination = Pagination(
+                currentPage = query.page,
+                itemsPerPages = query.limit,
+                totalItems = 9999
+            ) // TODO: Get count
+        )
+
+        return MoshiHelper.wrapperToJson(response)
+    }
+
+    override fun getSpots(query: SearchWithPaginationDto): String {
+        val spots: List<Spot> = userRepository.getSpots(query)
+
+        // Wrapper
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = spots,
             pagination = Pagination(
                 currentPage = query.page,
                 itemsPerPages = query.limit,

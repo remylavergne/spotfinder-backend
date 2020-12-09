@@ -87,22 +87,16 @@ fun Route.usersController() {
         )
     }
 
-    get("/user/{id}/comments") {
-        val id = call.parameters["id"]
-        val page = call.request.queryParameters["page"]?.toInt()
-        val limit = call.request.queryParameters["limit"]?.toInt()
+    post("/user/comments") { // TODO: Refactor comme pour les photos
+        call.getResponseObject<SearchWithPaginationDto>()?.let {
+            val comments: String = userService.getComments(it)
 
-        if (page == null || limit == null) {
-            throw Exception("missing pagination infos") // TODO: New Exception for this
-        }
-
-        val response = commentsService.getComments(SearchCommentsDto(userId = id), page, limit)
-
-        call.respondText(
-            contentType = ContentType.Application.Json,
-            text = response,
-            status = HttpStatusCode.OK
-        )
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = comments,
+                status = HttpStatusCode.OK
+            )
+        } ?: call.respond(HttpStatusCode.BadRequest)
     }
 
     post("/user/pictures") {
@@ -112,6 +106,18 @@ fun Route.usersController() {
             call.respondText(
                 contentType = ContentType.Application.Json,
                 text = pictures,
+                status = HttpStatusCode.OK
+            )
+        } ?: call.respond(HttpStatusCode.BadRequest)
+    }
+
+    post("/user/spots") {
+        call.getResponseObject<SearchWithPaginationDto>()?.let {
+            val spots: String = userService.getSpots(it)
+
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = spots,
                 status = HttpStatusCode.OK
             )
         } ?: call.respond(HttpStatusCode.BadRequest)

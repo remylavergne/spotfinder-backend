@@ -11,4 +11,6 @@ interface UserService {
     fun retrieveAccount(credentials: RetrieveAccountDto): String?
     fun createUser(username: String): String?
     fun getPictures(query: SearchWithPaginationDto): String
+    fun getComments(query: SearchWithPaginationDto): String
+    fun getSpots(query: SearchWithPaginationDto): String
 }

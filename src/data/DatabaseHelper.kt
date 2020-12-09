@@ -68,4 +68,6 @@ interface DatabaseHelper {
     fun getPictureComments(id: String, page: Int, limit: Int): List<Comment>
     fun getCommentComments(id: String, page: Int, limit: Int): List<Comment>
     fun getUserComments(id: String, page: Int, limit: Int): List<Comment>
+    fun getUserSpots(id: String, page: Int, limit: Int): List<Spot>
+    // TODO: Reorganize and document
 }

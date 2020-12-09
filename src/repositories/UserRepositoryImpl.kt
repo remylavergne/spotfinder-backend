@@ -3,7 +3,9 @@ package dev.remylavergne.spotfinder.repositories
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.DatabaseHelper
+import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
+import dev.remylavergne.spotfinder.data.models.Spot
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.utils.PasswordTools
 import sun.security.util.Password
@@ -44,5 +46,13 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
 
     override fun getPictures(query: SearchWithPaginationDto): List<Picture> {
         return databaseHelper.getUserPictures(query.id, query.page, query.limit)
+    }
+
+    override fun getComments(query: SearchWithPaginationDto): List<Comment> {
+        return databaseHelper.getUserComments(query.id, query.page, query.limit)
+    }
+
+    override fun getSpots(query: SearchWithPaginationDto): List<Spot> {
+        return databaseHelper.getUserSpots(query.id, query.page, query.limit)
     }
 }
