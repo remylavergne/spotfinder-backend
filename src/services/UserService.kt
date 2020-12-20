@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.services
 
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
+import dev.remylavergne.spotfinder.controllers.dto.UpdateUserProfile
 import dev.remylavergne.spotfinder.data.models.User
 import io.ktor.http.Parameters
 
@@ -13,4 +14,5 @@ interface UserService {
     fun getPictures(query: SearchWithPaginationDto): String
     fun getComments(query: SearchWithPaginationDto): String
     fun getSpots(query: SearchWithPaginationDto): String
+    fun updateProfile(data: UpdateUserProfile): String?
 }

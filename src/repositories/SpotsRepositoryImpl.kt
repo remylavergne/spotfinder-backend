@@ -22,10 +22,6 @@ class SpotsRepositoryImpl(private val databaseHelper: DatabaseHelper) : SpotsRep
         return databaseHelper.getSpotsByRider(id)
     }
 
-    override fun getSpotsByCountry(country: String): List<Spot> {
-        return databaseHelper.getSpotsByCountry(country)
-    }
-
     override fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot> {
         return databaseHelper.getLatestPaginatedSpots(page, limit)
     }

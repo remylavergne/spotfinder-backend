@@ -4,10 +4,7 @@ import com.mongodb.client.model.Filters.near
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
-import dev.remylavergne.spotfinder.data.models.Comment
-import dev.remylavergne.spotfinder.data.models.Picture
-import dev.remylavergne.spotfinder.data.models.Spot
-import dev.remylavergne.spotfinder.data.models.User
+import dev.remylavergne.spotfinder.data.models.*
 import io.ktor.util.*
 import org.bson.Document
 import org.bson.conversions.Bson
@@ -83,10 +80,6 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
-    override fun getSpotsByCountry(country: String): List<Spot> {
-        TODO("Not yet implemented")
-    }
-
     override fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot> {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
@@ -101,7 +94,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
-    override fun getSpotsCount(): Long { // TODO: Prendre en compte seulement les Spots valides
+    override fun getSpotsCount(): Long {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
         return try {
@@ -238,7 +231,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
         return try {
-            collection.find(Spot::address eq null).toList()
+            collection.find(Spot::address eq null, Spot::allowed eq true).toList()
         } catch (e: Exception) {
             emptyList()
         }
@@ -286,10 +279,8 @@ class DatabaseHelperImpl : DatabaseHelper {
     override fun searchSpots(term: String): List<Spot> {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
-
         return try {
-            val query: Bson = text(term) // TODO -> Case sensitive ?
-
+            val query: Bson = text(term)
             collection.find(Spot::allowed eq true, query).toList()
         } catch (e: Exception) {
             emptyList()
@@ -393,6 +384,35 @@ class DatabaseHelperImpl : DatabaseHelper {
             collection.aggregate(listOf(match, skip, limite)).toList()
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    override fun updateUserProfilePicture(userId: String, pictureId: String): User? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            collection.findOne(User::id eq userId)?.let { user: User ->
+                collection.updateOne(User::id eq userId, setValue(User::pictureId, pictureId))
+                user
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override fun updateToken(userId: String, token: String) {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<TokenEntity>(SpotfinderCollections.TOKENS.value)
+        try {
+            val currentToken = collection.findOne(TokenEntity::userId eq userId)
+
+            if (currentToken != null) {
+                collection.updateOne(TokenEntity::userId eq userId, setValue(TokenEntity::token, token))
+            } else {
+                collection.insertOne(TokenEntity(userId, token))
+            }
+        } catch (e: Exception) {
+            println(e)
         }
     }
 }

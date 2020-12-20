@@ -11,7 +11,6 @@ interface SpotsService {
     fun getSpots(): String
     fun getSpotById(id: String): String?
     fun getSpotsByRider(id: String): String
-    fun getSpotsByCountry(country: String): String
     fun getLatestPaginatedSpots(queryParams: Parameters): String
     fun getSpotsCount(): Long
     fun getSpotsNearestTo(position: Position, page: Int, limit: Int): String
