@@ -1,0 +1,101 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo-spotfinder
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/etc/mongo
+    env_file:
+      - spotfinder-backend.env
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express-spotfinder
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    env_file:
+      - spotfinder-backend.env
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
+
+  # spotfinder-backend:
+  #   build: .
+  #   image: spotfinder-backend
+  #   container_name: spotfinder-backend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mongo
+  #   expose:
+  #     - 8080
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - ./pictures:/app/pictures
+  #   env_file:
+  #     - spotfinder-backend.env
+  #   environment:
+  #     VIRTUAL_HOST: spotfinder-preprod-api.remylavergne.dev
+  #     LETSENCRYPT_HOST: spotfinder-preprod-api.remylavergne.dev
+  #     LETSENCRYPT_EMAIL: lavergne.remy@gmail.com
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-file: "5"
+  #       max-size: "10m"
+  # prometheus:
+  #   image: prom/prometheus:v2.21.0
+  #   container_name: prometheus-spotfinder
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mongo
+  #     - spotfinder-backend
+  #   ports:
+  #     - 9090
+  #   volumes:
+  #     - ./monitoring:/etc/prometheus/
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-file: "5"
+  #       max-size: "10m"
+  # grafana:
+  #   image: grafana/grafana:7.2.1-ubuntu
+  #   container_name: grafana-spotfinder
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mongo
+  #     - prometheus
+  #     - spotfinder-backend
+  #   expose:
+  #     - 3000
+  #   volumes:
+  #     - ./monitoring/grafana:/var/lib/grafana
+  #   environment:
+  #     VIRTUAL_HOST: spotfinder-grafana.remylavergne.dev
+  #     LETSENCRYPT_HOST: spotfinder-grafana.remylavergne.dev
+  #     LETSENCRYPT_EMAIL: lavergne.remy@gmail.com
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-file: "5"
+  #       max-size: "10m"
+
+networks:
+  default:
+    external:
+      name: spotfinder-dev
