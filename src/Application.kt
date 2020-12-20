@@ -32,12 +32,12 @@ fun Application.module(testing: Boolean = false) {
     routing {
         defaultController()
         usersController()
-        spotsController()
-        picturesController()
         authenticate {
+            spotsController()
+            picturesController()
             searchController()
+            commentsController()
         }
-        commentsController()
         metricsController()
     }
 }
