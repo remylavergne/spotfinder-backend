@@ -8,3 +8,4 @@
 /pictures
 /monitoring/grafana
 .DS_Store
+docker-prod-env/monitoring/grafana/grafana.db
