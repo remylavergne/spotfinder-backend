@@ -1,9 +1,6 @@
 package dev.remylavergne.spotfinder.services
 
-import dev.remylavergne.spotfinder.controllers.dto.Pagination
-import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
-import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
-import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
+import dev.remylavergne.spotfinder.controllers.dto.*
 import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
@@ -12,11 +9,8 @@ import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.repositories.UserRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
 import dev.remylavergne.spotfinder.utils.PasswordTools
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.response.*
 import io.ktor.util.*
-import java.util.*
 
 @KtorExperimentalAPI
 class UserServiceImpl(private val userRepository: UserRepository) : UserService {
@@ -110,5 +104,14 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         )
 
         return MoshiHelper.wrapperToJson(response)
+    }
+
+    override fun updateProfile(data: UpdateUserProfile): String? {
+        val user: User? = userRepository.updateProfile(data)
+        return if (user == null) {
+            null
+        } else {
+            MoshiHelper.toJson(user)
+        }
     }
 }

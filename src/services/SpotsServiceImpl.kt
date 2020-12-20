@@ -39,10 +39,6 @@ class SpotsServiceImpl(private val spotsRepository: SpotsRepository) : SpotsServ
         return spotsRepository.getSpotsByRider(id).toJson()
     }
 
-    override fun getSpotsByCountry(country: String): String {
-        TODO("Not yet implemented")
-    }
-
     override fun getLatestPaginatedSpots(queryParams: Parameters): String {
         val page = queryParams["page"]?.toInt()
         val limit = queryParams["limit"]?.toInt()

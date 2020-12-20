@@ -56,7 +56,7 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
                             }
                         }
                     } catch (e: Exception) {
-                        println(e) // TODO: Handle exception
+                        println(e)
                     }
                 }
                 else -> throw Exception("Unknown part value")

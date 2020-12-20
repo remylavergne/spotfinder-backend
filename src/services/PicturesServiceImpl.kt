@@ -16,7 +16,7 @@ import java.io.File
 class PicturesServiceImpl(private val picturesRepo: PicturesRepository, private val spotsRepository: SpotsRepository) :
     PicturesService {
 
-    override suspend fun savePicture(data: MultiPartData): String {
+    override suspend fun savePicture(data: MultiPartData): String? {
 
         val partData = mutableListOf<PartData>()
 
@@ -24,15 +24,16 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository, private 
         data.forEachPart { part: PartData -> partData.add(part) }
         // Check if all parts needed are available
         if (partData.count() != 3) {
-            return "ERROR"
+            return null
         }
         // Create and Backup picture
-        picturesRepo.savePictureAsFile(partData)?.let { pictureFile: File ->
+        val response: String? = picturesRepo.savePictureAsFile(partData)?.let { pictureFile: File ->
             val picture = picturesRepo.persistPicture(pictureFile)
             this.spotsRepository.updatePictureId(picture)
-        } ?: return "ERROR"
+            return@let MoshiHelper.toJson(picture)
+        }
 
-        return "OK" // todo: rework
+        return response
     }
 
     override suspend fun getPicturesBySpotId(id: String): String {

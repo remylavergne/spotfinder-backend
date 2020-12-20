@@ -13,13 +13,13 @@ interface DatabaseHelper {
     fun getSpots(): List<Spot>
     fun getSpotById(id: String): Spot?
     fun getSpotsByRider(id: String): List<Spot>
-    fun getSpotsByCountry(country: String): List<Spot>
     fun getLatestPaginatedSpots(page: Int, limit: Int): List<Spot>
     fun getSpotWithoutAddresses(): List<Spot>
     fun updateSpotAddress(spot: Spot): Spot
     fun updateSpotName(spot: Spot): Spot
     fun getSpotsNearestTo(position: Position, page: Int, limit: Int): List<Spot>
     fun searchSpots(term: String): List<Spot>
+    fun updatePictureId(picture: Picture): Boolean
 
     /**
      * Get Spot allowed documents total number
@@ -60,7 +60,8 @@ interface DatabaseHelper {
     fun getUserByUsername(username: String): User?
     fun getUserById(id: String): User?
     fun createUser(user: User): Boolean
-    fun updatePictureId(picture: Picture): Boolean
+    fun updateUserProfilePicture(userId: String, pictureId: String): User?
+    fun updateToken(userId: String, token: String)
 
     // Comments
     fun addComment(data: Comment): Comment?
@@ -69,5 +70,6 @@ interface DatabaseHelper {
     fun getCommentComments(id: String, page: Int, limit: Int): List<Comment>
     fun getUserComments(id: String, page: Int, limit: Int): List<Comment>
     fun getUserSpots(id: String, page: Int, limit: Int): List<Spot>
-    // TODO: Reorganize and document
+
+// TODO: Reorganize and document
 }

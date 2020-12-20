@@ -28,8 +28,12 @@ fun Route.picturesController() {
     }
 
     post("/upload/picture") {
-        pictureService.savePicture(call.receiveMultipart()).let { response ->
-            call.respondText(text = response, status = HttpStatusCode.OK, contentType = ContentType.Text.Plain)
+        pictureService.savePicture(call.receiveMultipart()).let { picture: String? ->
+            if (picture == null) {
+                call.respond(HttpStatusCode.BadRequest)
+            } else {
+                call.respondText(text = picture, status = HttpStatusCode.OK, contentType = ContentType.Text.Plain)
+            }
         }
     }
 
