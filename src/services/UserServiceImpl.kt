@@ -26,6 +26,7 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         return if (user != null) {
             val newToken: String = JWTTool.makeToken(user)
             user.token = newToken
+            userRepository.updateToken(user.id, newToken)
             MoshiHelper.toJson(user)
         } else {
             null
@@ -48,6 +49,7 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         val result = userRepository.insertUser(newUser)
         return if (result) {
             val token = JWTTool.makeToken(newUser)
+            userRepository.updateToken(newUser.id, token)
             val dto = newUser.toNewAccountDto(randomPassword, token)
             MoshiHelper.toJson(dto)
         } else {

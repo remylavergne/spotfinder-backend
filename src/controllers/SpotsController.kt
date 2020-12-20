@@ -81,22 +81,6 @@ fun Route.spotsController() {
         )
     }
 
-    // todo: Move to user controller
-    get("/spot/rider/{id}") {
-        call.parameters["id"]?.let { riderId: String ->
-            val jsonSpots = spotsService.getSpotsByRider(riderId)
-            call.respondText(
-                contentType = ContentType.Application.Json,
-                text = jsonSpots,
-                status = HttpStatusCode.OK
-            )
-        } ?: call.respondText(
-            text = "Error, id missing",
-            status = HttpStatusCode.NotFound,
-            contentType = ContentType.Text.Plain
-        )
-    }
-
     get("/spot/{id}/pictures") {
         val spotID = call.parameters["id"]
         val page = call.request.queryParameters["page"]?.toInt()
