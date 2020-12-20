@@ -11,9 +11,9 @@ import java.util.*
 @KtorExperimentalAPI
 object JWTTool {
 
-    private const val secret = "zAP5MBA4B4Ijz0MZaS48" // TODO: Export to env variables
+    private lateinit var secret: String
     private const val validityInMs = 36_000_00 * 100 // 10 hours
-    private val algorithm = Algorithm.HMAC256(secret)
+    private lateinit var algorithm: Algorithm
     lateinit var jwtIssuer: String
         private set
     lateinit var jwtAudience: String
@@ -22,9 +22,11 @@ object JWTTool {
         private set
 
     fun init(environment: ApplicationEnvironment) {
+        this.secret = environment.config.property("jwt.secret").getString()
         this.jwtIssuer = environment.config.property("jwt.domain").getString()
         this.jwtAudience = environment.config.property("jwt.audience").getString()
         this.jwtRealm = environment.config.property("jwt.realm").getString()
+        this.algorithm = Algorithm.HMAC256(secret)
     }
 
     fun makeJwtVerifier(issuer: String, audience: String): JWTVerifier = JWT
@@ -41,13 +43,8 @@ object JWTTool {
         .withAudience(jwtAudience)
         .withIssuer(jwtIssuer)
         .withClaim("id", user.id)
-        // .withArrayClaim("countries", user.countries.toTypedArray())
         .withExpiresAt(getExpiration())
         .sign(algorithm)
-
-    fun checkToken(token: String): Boolean {
-        return false
-    }
 
     /**
      * Calculate the expiration Date based on current time + the given validity
