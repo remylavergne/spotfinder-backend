@@ -9,3 +9,4 @@
 /monitoring/grafana
 .DS_Store
 docker-prod-env/monitoring/grafana/grafana.db
+docker-prod-env/libs/spotfinder-backend.jar
