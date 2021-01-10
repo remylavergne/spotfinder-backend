@@ -61,6 +61,15 @@ Enter password:
 > use spotfinder
 ```
 
+### Update Mongo object CLI
+
+```bash
+# Allowed all pictures
+db.pictures.updateMany({}, {$set: {allowed: true}}) 
+# Allowed all spots
+db.spots.updateMany({}, {$set: {allowed: true}})
+```
+
 ## Indexs nécessaires
 
 ### Users
