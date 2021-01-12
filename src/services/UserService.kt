@@ -15,4 +15,5 @@ interface UserService {
     fun getComments(query: SearchWithPaginationDto): String
     fun getSpots(query: SearchWithPaginationDto): String
     fun updateProfile(data: UpdateUserProfile): String?
+    fun getPendingSpots(queryData: SearchWithPaginationDto): String
 }

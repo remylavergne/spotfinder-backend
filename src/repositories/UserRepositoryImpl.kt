@@ -57,6 +57,10 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
         return databaseHelper.getUserSpots(query.id, query.page, query.limit)
     }
 
+    override fun getPendingSpots(queryData: SearchWithPaginationDto): List<Spot> {
+        return databaseHelper.getPendingSpots(queryData.id, queryData.page, queryData.limit)
+    }
+
     override fun updateProfile(data: UpdateUserProfile): User? {
         var user: User? = null
         data.pictureId?.let { user = databaseHelper.updateUserProfilePicture(data.userId, data.pictureId) }

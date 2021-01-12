@@ -18,4 +18,5 @@ interface UserRepository {
     fun getSpots(query: SearchWithPaginationDto): List<Spot>
     fun updateProfile(data: UpdateUserProfile): User?
     fun updateToken(userId: String, token: String)
+    fun getPendingSpots(queryData: SearchWithPaginationDto): List<Spot>
 }
