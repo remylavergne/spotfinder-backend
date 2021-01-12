@@ -1,17 +1,30 @@
 # spotfinder-backend
 
-# Deployer l'environnement
+## Environnement de développement
+
+- Se placer dans le dossier `local-dev-env`
+- Editer le fichier `spotfinder-backend.env`
+- Exécuter `docker-compose up -d` pour lancer `mongo` et `mongo-express`
+- Ouvrir le projet avec *IntelliJ Idea*
+
+*Mongo Express* est disponible à l'adresse : <http://localhost:8081>
+
+## Environnement de production
+
+### Déploiement automatique
 
 - Modifier les variables d'environnement dans le fichier `spotfinder-backend.env`
+- Lancer le script `docker-prod-env`
 
-  Script d'initialisation :
+### Deployer l'environnement manuellement
 
+- Modifier les variables d'environnement dans le fichier `spotfinder-backend.env`
 - Builder une version du backend via la tâche Gradle `shadowJar` dans le `build.gradle`
 - Créer un dossier `pictures` à l'endroit où est déployé le serveur
 - Créer un dossier `mongo` à l'endroit où est déployé le serveur
 - Créer un dossier `monitoring` à l'endroit où est déployé le serveur
 - Créer un dossier `monitoring/grafana` à l'endroit où est déployé le serveur
-- Le dossier `grafana` doit avoir les droits `472:472`
+- Le dossier `grafana` doit avoir les droits `472:472` // TODO Editer ceci.
 
 ```shell
 # GF_PATHS_DATA='/var/lib/grafana' is not writable.
@@ -25,7 +38,6 @@ sudo chown -R 472:472 grafana
 - Mettre la configuration `prometheus.yml` dans le dossier `monitoring`
 - Mettre la configuration `grafana-dashboard.json` dans le dossier `monitoring`
 - Déployer `docker-compose up -d`
-- Taguer la version ??
 
 # Start project
 
