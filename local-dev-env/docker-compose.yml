@@ -3,7 +3,7 @@ version: "3.8"
 services:
   mongo:
     image: mongo
-    container_name: mongo-spotfinder
+    container_name: spotfinder-mongo
     restart: unless-stopped
     ports:
       - 27017:27017
@@ -19,7 +19,7 @@ services:
 
   mongo-express:
     image: mongo-express
-    container_name: mongo-express-spotfinder
+    container_name: spotfinder-mongo-express
     restart: unless-stopped
     depends_on:
       - mongo

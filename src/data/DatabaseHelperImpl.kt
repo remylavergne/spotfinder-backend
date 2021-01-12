@@ -94,6 +94,20 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun getPendingSpots(id: String, page: Int, limit: Int): List<Spot> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection.find(Spot::allowed eq false, Spot::user eq id)
+                .descendingSort(Spot::creationDate)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
     override fun getSpotsCount(): Long {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)

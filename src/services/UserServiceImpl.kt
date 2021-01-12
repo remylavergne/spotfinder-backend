@@ -108,6 +108,23 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         return MoshiHelper.wrapperToJson(response)
     }
 
+    override fun getPendingSpots(queryData: SearchWithPaginationDto): String {
+        val spots: List<Spot> = userRepository.getPendingSpots(queryData)
+
+        // Wrapper
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = spots,
+            pagination = Pagination(
+                currentPage = queryData.page,
+                itemsPerPages = queryData.limit,
+                totalItems = 9999
+            ) // TODO: Get count
+        )
+
+        return MoshiHelper.wrapperToJson(response)
+    }
+
     override fun updateProfile(data: UpdateUserProfile): String? {
         val user: User? = userRepository.updateProfile(data)
         return if (user == null) {

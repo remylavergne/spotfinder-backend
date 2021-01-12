@@ -80,6 +80,18 @@ fun Route.usersController() {
             } ?: call.respond(HttpStatusCode.BadRequest)
         }
 
+        post("/user/pending-spots") {
+            call.getResponseObject<SearchWithPaginationDto>()?.let {
+                val spots: String = userService.getPendingSpots(it)
+
+                call.respondText(
+                    contentType = ContentType.Application.Json,
+                    text = spots,
+                    status = HttpStatusCode.OK
+                )
+            } ?: call.respond(HttpStatusCode.BadRequest)
+        }
+
         put("/user/update-profile") {
             call.getResponseObject<UpdateUserProfile>()?.let {
                 val response: String? = userService.updateProfile(it)

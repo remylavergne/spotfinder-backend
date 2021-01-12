@@ -62,6 +62,7 @@ interface DatabaseHelper {
     fun createUser(user: User): Boolean
     fun updateUserProfilePicture(userId: String, pictureId: String): User?
     fun updateToken(userId: String, token: String)
+    fun getPendingSpots(id: String, page: Int, limit: Int): List<Spot>
 
     // Comments
     fun addComment(data: Comment): Comment?
