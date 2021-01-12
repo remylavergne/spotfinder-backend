@@ -47,6 +47,16 @@ object DatabaseProvider {
         return this
     }
 
+    private fun createCollections(database: MongoDatabase) {
+        val existingCollections = database.listCollectionNames()
+        // Create all collections
+        SpotfinderCollections.values().forEach {
+            if (!existingCollections.contains(it.value)) {
+                database.createCollection(it.value)
+            }
+        }
+    }
+
     private fun createIndexes(database: MongoDatabase) {
         // SPOTS
         val spotCollection = database.getCollection(SpotfinderCollections.SPOTS.value)
@@ -60,13 +70,4 @@ object DatabaseProvider {
             .createIndex(Indexes.text("username"))
     }
 
-    private fun createCollections(database: MongoDatabase) {
-        val existingCollections = database.listCollectionNames()
-        // Create all collections
-        SpotfinderCollections.values().forEach {
-            if (!existingCollections.contains(it.value)) {
-                database.createCollection(it.value)
-            }
-        }
-    }
 }
