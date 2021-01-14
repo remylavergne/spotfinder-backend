@@ -3,10 +3,7 @@ package dev.remylavergne.spotfinder.repositories
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.controllers.dto.UpdateUserProfile
-import dev.remylavergne.spotfinder.data.models.Comment
-import dev.remylavergne.spotfinder.data.models.Picture
-import dev.remylavergne.spotfinder.data.models.Spot
-import dev.remylavergne.spotfinder.data.models.User
+import dev.remylavergne.spotfinder.data.models.*
 
 interface UserRepository {
     fun logUserConnection(userId: String)
@@ -19,4 +16,6 @@ interface UserRepository {
     fun updateProfile(data: UpdateUserProfile): User?
     fun updateToken(userId: String, token: String)
     fun getPendingSpots(queryData: SearchWithPaginationDto): List<Spot>
+    fun getPendingPictures(data: SearchWithPaginationDto): List<Picture>
+    fun getUserStatistics(data: SearchWithPaginationDto): UserStatistics
 }

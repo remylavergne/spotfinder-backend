@@ -4,10 +4,7 @@ import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.controllers.dto.UpdateUserProfile
 import dev.remylavergne.spotfinder.data.DatabaseHelper
-import dev.remylavergne.spotfinder.data.models.Comment
-import dev.remylavergne.spotfinder.data.models.Picture
-import dev.remylavergne.spotfinder.data.models.Spot
-import dev.remylavergne.spotfinder.data.models.User
+import dev.remylavergne.spotfinder.data.models.*
 import dev.remylavergne.spotfinder.utils.PasswordTools
 import sun.security.util.Password
 
@@ -49,6 +46,10 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
         return databaseHelper.getUserPictures(query.id, query.page, query.limit)
     }
 
+    override fun getPendingPictures(data: SearchWithPaginationDto): List<Picture> {
+        return databaseHelper.getPendingUserPictures(data.id, data.page, data.limit)
+    }
+
     override fun getComments(query: SearchWithPaginationDto): List<Comment> {
         return databaseHelper.getUserComments(query.id, query.page, query.limit)
     }
@@ -70,5 +71,18 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
 
     override fun updateToken(userId: String, token: String) {
         databaseHelper.updateToken(userId, token)
+    }
+
+    override fun getUserStatistics(data: SearchWithPaginationDto): UserStatistics {
+        val spotsCount: Int = databaseHelper.getUserSpotsCount(data.id)
+        val picturesCount: Int = databaseHelper.getUserPicturesCount(data.id)
+        val commentsCount: Int = databaseHelper.getUserCommentsCount(data.id)
+
+        return UserStatistics(
+            userId = data.id,
+            spots = spotsCount,
+            pictures = picturesCount,
+            comments = commentsCount
+        )
     }
 }

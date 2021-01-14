@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.controllers.dto.Position
 import dev.remylavergne.spotfinder.controllers.dto.SearchCommentsDto
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
 import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.PicturesService
@@ -96,6 +97,18 @@ fun Route.spotsController() {
             text = response,
             status = HttpStatusCode.OK
         )
+    }
+
+    post("/spot/pending-pictures") {
+        call.getResponseObject<SearchWithPaginationDto>()?.let { data ->
+            val response = pictureService.getPendingPicturesBySpotId(data)
+
+            call.respondText(
+                contentType = ContentType.Application.Json,
+                text = response,
+                status = HttpStatusCode.OK
+            )
+        }
     }
 
     post("/spots/nearest") {

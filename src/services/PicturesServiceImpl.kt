@@ -2,6 +2,8 @@ package dev.remylavergne.spotfinder.services
 
 import dev.remylavergne.spotfinder.controllers.dto.Pagination
 import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
+import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.repositories.PicturesRepository
 import dev.remylavergne.spotfinder.repositories.SpotsRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
@@ -47,7 +49,7 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository, private 
     }
 
     override fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): String {
-        val pictures = picturesRepo.getPaginatedPicturesBySpot(id, page, limit)
+        val pictures: List<Picture> = picturesRepo.getPaginatedPicturesBySpot(id, page, limit)
         val count = this.getPicturesCountBySpotId(id)
 
         val response = ResultWrapper(
@@ -55,6 +57,18 @@ class PicturesServiceImpl(private val picturesRepo: PicturesRepository, private 
             result = pictures,
             pagination = Pagination(currentPage = page, itemsPerPages = pictures.count(), totalItems = count)
         )
+
+        return MoshiHelper.wrapperToJson(response)
+    }
+
+    override fun getPendingPicturesBySpotId(data: SearchWithPaginationDto): String {
+        val pictures: List<Picture> = picturesRepo.getPendingPicturesBySpotId(data)
+
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = pictures,
+            pagination = Pagination(currentPage = data.page, itemsPerPages = pictures.count(), totalItems = 9999)
+        ) // TODO: Get count
 
         return MoshiHelper.wrapperToJson(response)
     }

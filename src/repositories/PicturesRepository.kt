@@ -13,4 +13,5 @@ interface PicturesRepository {
     fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): List<Picture>
     fun getPicturesCountBySpotId(id: String): Long
     fun createThumbnail(pictureFile: File): File
+    fun getPendingPicturesBySpotId(data: SearchWithPaginationDto): List<Picture>
 }

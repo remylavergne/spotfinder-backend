@@ -107,6 +107,10 @@ class PicturesRepositoryImpl(private val databaseHelper: DatabaseHelper) : Pictu
         return databaseHelper.getPaginatedPicturesBySpot(id, page, limit)
     }
 
+    override fun getPendingPicturesBySpotId(data: SearchWithPaginationDto): List<Picture> {
+        return databaseHelper.getPendingPicturesBySpotId(data.id, data.page, data.limit)
+    }
+
     override fun getPicturesCountBySpotId(id: String): Long {
         return databaseHelper.getPicturesCountBySpot(id)
     }
