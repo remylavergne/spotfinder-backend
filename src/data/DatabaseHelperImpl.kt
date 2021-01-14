@@ -135,6 +135,20 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun getPendingPicturesBySpotId(id: String, page: Int, limit: Int): List<Picture> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            collection.find(Picture::allowed eq false, Picture::isThumbnail eq false, Picture::spotId eq id)
+                .descendingSort(Picture::createdAt)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toList()
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
     override fun getPicturesCountBySpot(id: String): Long {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
@@ -387,6 +401,20 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun getPendingUserPictures(id: String, page: Int, limit: Int): List<Picture> {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            val match: Bson = match(Picture::allowed eq false, Picture::isThumbnail eq false, Picture::userId eq id)
+            val skip: Bson = skip((page - 1) * limit)
+            val limite: Bson = limit(limit)
+
+            collection.aggregate(listOf(match, skip, limite)).toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     override fun getUserSpots(id: String, page: Int, limit: Int): List<Spot> {
         val db = DatabaseProvider.database
         val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
@@ -427,6 +455,45 @@ class DatabaseHelperImpl : DatabaseHelper {
             }
         } catch (e: Exception) {
             println(e)
+        }
+    }
+
+    override fun getUserSpotsCount(userId: String): Int {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Spot>(SpotfinderCollections.SPOTS.value)
+        return try {
+            collection
+                .find(Spot::allowed eq true, Spot::user eq userId)
+                .count()
+        } catch (e: Exception) {
+            println(e)
+            0
+        }
+    }
+
+    override fun getUserPicturesCount(userId: String): Int {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Picture>(SpotfinderCollections.PICTURES.value)
+        return try {
+            collection
+                .find(Picture::allowed eq true, Picture::isThumbnail eq false, Picture::userId eq userId)
+                .count()
+        } catch (e: Exception) {
+            println(e)
+            0
+        }
+    }
+
+    override fun getUserCommentsCount(userId: String): Int {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Comment>(SpotfinderCollections.COMMENTS.value)
+        return try {
+            collection
+                .find(Comment::allowed eq true, Comment::userId eq userId)
+                .count()
+        } catch (e: Exception) {
+            println(e)
+            0
         }
     }
 }

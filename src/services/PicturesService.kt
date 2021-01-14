@@ -1,5 +1,6 @@
 package dev.remylavergne.spotfinder.services
 
+import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
 import dev.remylavergne.spotfinder.data.models.Picture
 import io.ktor.application.*
 import io.ktor.http.*
@@ -12,4 +13,5 @@ interface PicturesService {
     fun getStaticContentPicture(ac: ApplicationCall): File?
     fun getPaginatedPicturesBySpot(id: String, page: Int, limit: Int): String
     fun getPicturesCountBySpotId(id: String): Long
+    fun getPendingPicturesBySpotId(data: SearchWithPaginationDto): String
 }

@@ -2,10 +2,7 @@ package dev.remylavergne.spotfinder.services
 
 import dev.remylavergne.spotfinder.controllers.dto.*
 import dev.remylavergne.spotfinder.data.JWTTool
-import dev.remylavergne.spotfinder.data.models.Comment
-import dev.remylavergne.spotfinder.data.models.Picture
-import dev.remylavergne.spotfinder.data.models.Spot
-import dev.remylavergne.spotfinder.data.models.User
+import dev.remylavergne.spotfinder.data.models.*
 import dev.remylavergne.spotfinder.repositories.UserRepository
 import dev.remylavergne.spotfinder.utils.MoshiHelper
 import dev.remylavergne.spotfinder.utils.PasswordTools
@@ -74,6 +71,23 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         return MoshiHelper.wrapperToJson(response)
     }
 
+    override fun getPendingPictures(data: SearchWithPaginationDto): String {
+        val pictures: List<Picture> = userRepository.getPendingPictures(data)
+
+        // Wrapper
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = pictures,
+            pagination = Pagination(
+                currentPage = data.page,
+                itemsPerPages = data.limit,
+                totalItems = 9999
+            ) // TODO: Get count
+        )
+
+        return MoshiHelper.wrapperToJson(response)
+    }
+
     override fun getComments(query: SearchWithPaginationDto): String {
         val comments: List<Comment> = userRepository.getComments(query)
 
@@ -132,5 +146,22 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         } else {
             MoshiHelper.toJson(user)
         }
+    }
+
+    override fun getUserStatictics(data: SearchWithPaginationDto): String {
+        val userStatistics: UserStatistics = userRepository.getUserStatistics(data)
+
+        // Wrapper
+        val response = ResultWrapper(
+            statusCode = HttpStatusCode.OK.value,
+            result = userStatistics,
+            pagination = Pagination(
+                currentPage = 0,
+                itemsPerPages = 0,
+                totalItems = 1
+            )
+        )
+
+        return MoshiHelper.wrapperToJson(response)
     }
 }

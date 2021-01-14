@@ -16,4 +16,6 @@ interface UserService {
     fun getSpots(query: SearchWithPaginationDto): String
     fun updateProfile(data: UpdateUserProfile): String?
     fun getPendingSpots(queryData: SearchWithPaginationDto): String
+    fun getPendingPictures(data: SearchWithPaginationDto): String
+    fun getUserStatictics(data: SearchWithPaginationDto): String
 }

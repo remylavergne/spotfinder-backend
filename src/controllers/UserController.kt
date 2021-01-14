@@ -68,6 +68,18 @@ fun Route.usersController() {
             } ?: call.respond(HttpStatusCode.BadRequest)
         }
 
+        post("/user/pending-pictures") {
+            call.getResponseObject<SearchWithPaginationDto>()?.let {
+                val pictures: String = userService.getPendingPictures(it)
+
+                call.respondText(
+                    contentType = ContentType.Application.Json,
+                    text = pictures,
+                    status = HttpStatusCode.OK
+                )
+            } ?: call.respond(HttpStatusCode.BadRequest)
+        }
+
         post("/user/spots") {
             call.getResponseObject<SearchWithPaginationDto>()?.let {
                 val spots: String = userService.getSpots(it)
@@ -109,6 +121,18 @@ fun Route.usersController() {
             } ?: call.respond(HttpStatusCode.BadRequest)
         }
 
+        post("/user/statistics") {
+            call.getResponseObject<SearchWithPaginationDto>()?.let {
+                val response: String = userService.getUserStatictics(it)
+
+                call.respondText(
+                    contentType = ContentType.Application.Json,
+                    text = response,
+                    status = HttpStatusCode.OK
+                )
+
+            } ?: call.respond(HttpStatusCode.BadRequest)
+        }
     }
 
     post("/user/create") {

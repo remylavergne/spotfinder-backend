@@ -33,6 +33,7 @@ interface DatabaseHelper {
     fun getPictureById(id: String): Picture?
     fun getPicturesByRiderId(id: String): List<Picture>
     fun getUserPictures(userId: String, page: Int, limit: Int): List<Picture>
+    fun getPendingPicturesBySpotId(id: String, page: Int, limit: Int): List<Picture>
 
     /**
      * Get Pictures for a specific Spot with Pagination
@@ -63,6 +64,11 @@ interface DatabaseHelper {
     fun updateUserProfilePicture(userId: String, pictureId: String): User?
     fun updateToken(userId: String, token: String)
     fun getPendingSpots(id: String, page: Int, limit: Int): List<Spot>
+    fun getPendingUserPictures(id: String, page: Int, limit: Int): List<Picture>
+    // User Statistics
+    fun getUserSpotsCount(userId: String): Int
+    fun getUserPicturesCount(userId: String): Int
+    fun getUserCommentsCount(userId: String): Int
 
     // Comments
     fun addComment(data: Comment): Comment?
