@@ -224,6 +224,20 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun updatePassword(userId: String, newPasswordHash: String): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            collection.findOne(User::id eq userId)?.let { user: User ->
+                collection.updateOne(User::id eq user.id, setValue(User::password, newPasswordHash))
+                true
+            } ?: false
+        } catch (e: Exception) {
+            println(e)
+            false
+        }
+    }
+
     override fun createUser(user: User): Boolean {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)

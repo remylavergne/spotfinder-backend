@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.data
 
 import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
+import dev.remylavergne.spotfinder.controllers.dto.UpdatePasswordDto
 import dev.remylavergne.spotfinder.data.models.Comment
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
@@ -65,6 +66,7 @@ interface DatabaseHelper {
     fun updateToken(userId: String, token: String)
     fun getPendingSpots(id: String, page: Int, limit: Int): List<Spot>
     fun getPendingUserPictures(id: String, page: Int, limit: Int): List<Picture>
+    fun updatePassword(userId: String, newPasswordHash: String): Boolean
     // User Statistics
     fun getUserSpotsCount(userId: String): Int
     fun getUserPicturesCount(userId: String): Int

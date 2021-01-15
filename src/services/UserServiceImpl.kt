@@ -164,4 +164,8 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
 
         return MoshiHelper.wrapperToJson(response)
     }
+
+    override fun updatePassword(data: UpdatePasswordDto): Boolean {
+        return userRepository.updatePassword(data)
+    }
 }

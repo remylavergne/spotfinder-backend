@@ -1,9 +1,6 @@
 package dev.remylavergne.spotfinder.controllers
 
-import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
-import dev.remylavergne.spotfinder.controllers.dto.SearchCommentsDto
-import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
-import dev.remylavergne.spotfinder.controllers.dto.UpdateUserProfile
+import dev.remylavergne.spotfinder.controllers.dto.*
 import dev.remylavergne.spotfinder.data.models.User
 import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.UserService
@@ -33,6 +30,26 @@ fun Route.usersController() {
                     )
                 } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
             } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
+        }
+
+        post("/user/update-password") {
+            call.getResponseObject<UpdatePasswordDto>()?.let {
+                val success: Boolean = userService.updatePassword(it)
+
+                if (success) {
+                    call.respondText(
+                        text = "Password updated",
+                        status = HttpStatusCode.OK,
+                        contentType = ContentType.Text.Plain
+                    )
+                } else {
+                    call.respondText(
+                        text = "Error during password update",
+                        status = HttpStatusCode.BadRequest,
+                        contentType = ContentType.Text.Plain
+                    )
+                }
+            } ?: call.respond(HttpStatusCode.NotFound, "Unable to update user password")
         }
 
         post("/user/log/{id}") {

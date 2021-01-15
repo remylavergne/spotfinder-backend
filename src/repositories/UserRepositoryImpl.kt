@@ -2,6 +2,7 @@ package dev.remylavergne.spotfinder.repositories
 
 import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
+import dev.remylavergne.spotfinder.controllers.dto.UpdatePasswordDto
 import dev.remylavergne.spotfinder.controllers.dto.UpdateUserProfile
 import dev.remylavergne.spotfinder.data.DatabaseHelper
 import dev.remylavergne.spotfinder.data.models.*
@@ -84,5 +85,30 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
             pictures = picturesCount,
             comments = commentsCount
         )
+    }
+
+    override fun updatePassword(data: UpdatePasswordDto): Boolean {
+        // Get user password
+        return databaseHelper.getUserById(data.userId)?.let { user: User ->
+            // Check if old matchs
+            user.password?.let { passwordHash: String ->
+                val matching: Boolean = PasswordTools.isPasswordMatching(passwordHash, data.currentPassword)
+
+                return if (matching) {
+                    // Update password
+                    PasswordTools.generateHash(data.newPassword)?.let { newPasswordHash: String ->
+                        return databaseHelper.updatePassword(data.userId, newPasswordHash)
+                    } ?: false
+                } else {
+                    false
+                }
+            }
+
+            // if match -> update it
+
+
+            return true
+        } ?: false
+
     }
 }
