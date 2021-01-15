@@ -18,4 +18,4 @@ docker container stop $(docker ps -a -q --filter "name=spotfinder-backend")
 docker container rm $(docker ps -a -q --filter "name=spotfinder-backend")
 # Create clean docker compose env
 echo "--> Rebuild && deploy backend"
-docker-compose up -d --no-deps --no-cache --build spotfinder-backend && echo "--> Done :)"
+docker-compose up -d --no-deps --force-recreate --build spotfinder-backend && echo "--> Done :)"
