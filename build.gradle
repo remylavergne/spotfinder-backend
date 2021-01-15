@@ -32,7 +32,7 @@ apply plugin: 'koin'
 
 
 group 'dev.remylavergne.spotfinder'
-version '0.0.3'
+version '0.0.5'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 sourceSets {
