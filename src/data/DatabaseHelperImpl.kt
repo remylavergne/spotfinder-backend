@@ -4,6 +4,7 @@ import com.mongodb.client.model.Filters.near
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
 import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
+import dev.remylavergne.spotfinder.controllers.dto.LikeType
 import dev.remylavergne.spotfinder.data.models.*
 import io.ktor.util.*
 import org.bson.Document
@@ -508,6 +509,29 @@ class DatabaseHelperImpl : DatabaseHelper {
         } catch (e: Exception) {
             println(e)
             0
+        }
+    }
+
+    /**
+     * Likes
+     */
+
+    override fun like(like: Like): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<Like>(SpotfinderCollections.LIKES.value)
+        return try {
+            val likeFound: Like? = collection.findOne(Like::id eq like.id, Like::userId eq like.userId)
+
+            return if (likeFound != null) {
+                collection.deleteOne(Like::id eq like.id, Like::userId eq like.userId)
+                true
+            } else {
+                collection.insertOne(like)
+                true
+            }
+        } catch (e: Exception) {
+            println(e)
+            false
         }
     }
 }
