@@ -43,7 +43,7 @@ object JWTTool {
         .withAudience(jwtAudience)
         .withIssuer(jwtIssuer)
         .withClaim("id", user.id)
-        .withExpiresAt(getExpiration())
+        // .withExpiresAt(getExpiration())
         .sign(algorithm)
 
     /**
