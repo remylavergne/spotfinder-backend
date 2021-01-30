@@ -5,5 +5,6 @@ enum class SpotfinderCollections(val value: String) {
     PICTURES("pictures"),
     USERS("users"),
     COMMENTS("comments"),
-    TOKENS("tokens")
+    TOKENS("tokens"),
+    LIKES("likes")
 }

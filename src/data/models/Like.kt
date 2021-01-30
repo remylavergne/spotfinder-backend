@@ -1,7 +1,6 @@
 package dev.remylavergne.spotfinder.data.models
 
 import dev.remylavergne.spotfinder.controllers.dto.LikeDto
-import dev.remylavergne.spotfinder.controllers.dto.LikeType
 
 data class Like(
     val id: String,

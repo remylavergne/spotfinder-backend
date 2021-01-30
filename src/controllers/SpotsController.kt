@@ -1,9 +1,6 @@
 package dev.remylavergne.spotfinder.controllers
 
-import dev.remylavergne.spotfinder.controllers.dto.Position
-import dev.remylavergne.spotfinder.controllers.dto.SearchCommentsDto
-import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
-import dev.remylavergne.spotfinder.controllers.dto.SpotCreationDto
+import dev.remylavergne.spotfinder.controllers.dto.*
 import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.PicturesService
 import dev.remylavergne.spotfinder.services.SpotsService
