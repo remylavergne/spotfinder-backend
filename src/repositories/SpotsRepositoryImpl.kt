@@ -1,7 +1,9 @@
 package dev.remylavergne.spotfinder.repositories
 
 import com.mongodb.client.model.geojson.Position
+import dev.remylavergne.spotfinder.controllers.dto.LikeDto
 import dev.remylavergne.spotfinder.data.DatabaseHelper
+import dev.remylavergne.spotfinder.data.models.Like
 import dev.remylavergne.spotfinder.data.models.Picture
 import dev.remylavergne.spotfinder.data.models.Spot
 

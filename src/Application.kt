@@ -37,6 +37,7 @@ fun Application.module(testing: Boolean = false) {
             picturesController()
             searchController()
             commentsController()
+            likesController()
         }
         metricsController()
     }

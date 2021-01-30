@@ -3,7 +3,9 @@ package dev.remylavergne.spotfinder.utils
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import dev.remylavergne.spotfinder.controllers.dto.LikeType
 import dev.remylavergne.spotfinder.controllers.dto.ResultWrapper
+import utils.EnumJsonAdapter
 import kotlin.reflect.KClass
 
 object MoshiHelper {
@@ -15,7 +17,7 @@ object MoshiHelper {
     }
 
     private fun getMoshiInstance(): Moshi = Moshi.Builder()
-        //.add(KotlinJsonAdapterFactory())
+        .add(LikeType::class.java, EnumJsonAdapter.create(LikeType::class.java))
         .build()
 
     // API
