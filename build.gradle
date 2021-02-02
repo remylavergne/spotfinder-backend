@@ -32,7 +32,7 @@ apply plugin: 'koin'
 
 
 group 'dev.remylavergne.spotfinder'
-version '0.0.5'
+version '0.0.6'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 sourceSets {
@@ -87,7 +87,7 @@ dependencies {
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
 
-detekt {
+/*detekt {
     failFast = true // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
     config = files("config/detekt.yml")
@@ -99,7 +99,7 @@ detekt {
         xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
         txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
     }
-}
+}*/
 
 tasks.detekt.jvmTarget = "1.8"
 
