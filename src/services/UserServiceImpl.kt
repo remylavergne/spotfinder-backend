@@ -40,9 +40,9 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         }
     }
 
-    override fun createUser(username: String): String? {
+    override fun createUser(userData: CreateAccountDto): String? {
         val randomPassword = PasswordTools.generatePassword()
-        val newUser = User.create(username, randomPassword)
+        val newUser = User.create(userData, randomPassword)
         val result = userRepository.insertUser(newUser)
         return if (result) {
             val token = JWTTool.makeToken(newUser)
