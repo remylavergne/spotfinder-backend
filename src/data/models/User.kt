@@ -1,8 +1,8 @@
 package dev.remylavergne.spotfinder.data.models
 
 import com.squareup.moshi.JsonClass
+import dev.remylavergne.spotfinder.controllers.dto.CreateAccountDto
 import dev.remylavergne.spotfinder.controllers.dto.NewAccountDto
-import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.utils.PasswordTools
 import java.util.*
 
@@ -16,21 +16,23 @@ data class User(
     val pictureId: String? = null,
     val spots: List<String> = listOf(),
     val pictures: List<String> = listOf(),
-    var token: String? = null
+    var token: String? = null,
+    var email: String? = null
 ) {
 
     companion object {
-        fun create(username: String, password: String): User {
+        fun create(userData: CreateAccountDto, password: String): User {
             val id = UUID.randomUUID().toString().split("-")[0]
-            val idUser = "$username#$id"
+            val idUser = "${userData.username}#$id"
             val passwordHash = PasswordTools.generateHash(password)
 
             return User(
                 id = idUser,
                 createdAt = System.currentTimeMillis(),
                 lastConnexion = System.currentTimeMillis(),
-                username = username,
-                password = passwordHash
+                username = userData.username,
+                password = passwordHash,
+                email = userData.email
             )
         }
     }

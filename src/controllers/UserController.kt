@@ -153,13 +153,8 @@ fun Route.usersController() {
     }
 
     post("/user/create") {
-        try {
-            val username = call.receive<String>()
-            if (username.isEmpty()) {
-                throw Exception("Username must not be empty")
-            }
-
-            val user = userService.createUser(username)
+        call.getResponseObject<CreateAccountDto>()?.let {
+            val user = userService.createUser(it)
 
             if (user == null) {
                 call.respondText(
@@ -174,12 +169,7 @@ fun Route.usersController() {
                     contentType = ContentType.Text.Plain
                 )
             }
-        } catch (e: Exception) {
-            println(e)
-            call.respondText(e.localizedMessage)
-            val logger = LoggerFactory.getLogger("Test")
-            logger.error(e.localizedMessage)
-        }
+        } ?: call.respond(HttpStatusCode.BadRequest)
     }
 
     post("/user/retrieve-account") {
