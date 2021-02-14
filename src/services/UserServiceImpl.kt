@@ -30,6 +30,14 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
         }
     }
 
+    override fun resetPassword(data: ResetPasswordDto): Boolean {
+        val user: User = userRepository.accountFound(data) ?: return false
+
+        // TODO: Send email service
+
+        return true
+    }
+
     override fun getUser(id: String?, username: String?): String? {
         val user = userRepository.getUser(id, username)
 

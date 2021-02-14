@@ -58,6 +58,7 @@ interface DatabaseHelper {
     fun isUsernameExist(username: String): Boolean
     fun getUserByUsername(username: String): User?
     fun getUserById(id: String): User?
+    fun getUserByEmail(email: String): User?
     fun createUser(user: User): Boolean
     fun updateUserProfilePicture(userId: String, pictureId: String): User?
     fun updateToken(userId: String, token: String)

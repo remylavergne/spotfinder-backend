@@ -1,18 +1,15 @@
 package dev.remylavergne.spotfinder.controllers
 
 import dev.remylavergne.spotfinder.controllers.dto.*
-import dev.remylavergne.spotfinder.data.models.User
-import dev.remylavergne.spotfinder.services.CommentsService
 import dev.remylavergne.spotfinder.services.UserService
 import dev.remylavergne.spotfinder.utils.getResponseObject
-import io.ktor.application.call
+import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.get
-import org.slf4j.LoggerFactory
 
 // TODO: Exception class for each Router
 fun Route.usersController() {
@@ -190,6 +187,26 @@ fun Route.usersController() {
                 )
             }
 
+        } ?: call.respond(HttpStatusCode.BadRequest)
+    }
+
+    post("/user/reset-password") {
+        call.getResponseObject<ResetPasswordDto>()?.let { data ->
+            val success: Boolean = userService.resetPassword(data)
+
+            if (success) {
+                call.respondText(
+                    text = "User found. Email will be sent quickly",
+                    status = HttpStatusCode.OK,
+                    contentType = ContentType.Text.Plain
+                )
+            } else {
+                call.respondText(
+                    text = "User not found",
+                    status = HttpStatusCode.NotFound,
+                    contentType = ContentType.Text.Plain
+                )
+            }
         } ?: call.respond(HttpStatusCode.BadRequest)
     }
 }

@@ -1,13 +1,9 @@
 package dev.remylavergne.spotfinder.repositories
 
-import dev.remylavergne.spotfinder.controllers.dto.RetrieveAccountDto
-import dev.remylavergne.spotfinder.controllers.dto.SearchWithPaginationDto
-import dev.remylavergne.spotfinder.controllers.dto.UpdatePasswordDto
-import dev.remylavergne.spotfinder.controllers.dto.UpdateUserProfile
+import dev.remylavergne.spotfinder.controllers.dto.*
 import dev.remylavergne.spotfinder.data.DatabaseHelper
 import dev.remylavergne.spotfinder.data.models.*
 import dev.remylavergne.spotfinder.utils.PasswordTools
-import sun.security.util.Password
 
 class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepository {
     override fun logUserConnection(userId: String) {
@@ -109,6 +105,9 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
 
             return true
         } ?: false
+    }
 
+    override fun accountFound(data: ResetPasswordDto): User? {
+        return databaseHelper.getUserByEmail(data.email)
     }
 }

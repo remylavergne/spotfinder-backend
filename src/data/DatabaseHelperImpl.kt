@@ -3,8 +3,6 @@ package dev.remylavergne.spotfinder.data
 import com.mongodb.client.model.Filters.near
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
-import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
-import dev.remylavergne.spotfinder.controllers.dto.LikeType
 import dev.remylavergne.spotfinder.data.models.*
 import io.ktor.util.*
 import org.bson.Document
@@ -219,6 +217,18 @@ class DatabaseHelperImpl : DatabaseHelper {
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
         return try {
             collection.findOne(User::id eq id)
+        } catch (e: Exception) {
+            println(e)
+            null
+        }
+    }
+
+    override fun getUserByEmail(email: String): User? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
+        return try {
+            val query = text(email)
+            collection.findOne(query)
         } catch (e: Exception) {
             println(e)
             null
