@@ -17,4 +17,5 @@ interface UserService {
     fun getPendingPictures(data: SearchWithPaginationDto): String
     fun getUserStatictics(data: SearchWithPaginationDto): String
     fun updatePassword(data: UpdatePasswordDto): Boolean
+    fun resetPassword(data: ResetPasswordDto): Boolean
 }
