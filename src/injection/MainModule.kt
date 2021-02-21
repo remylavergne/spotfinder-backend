@@ -12,10 +12,11 @@ val mainModule = module(createdAtStart = true) {
     // Services
     single<PicturesService> { PicturesServiceImpl(get(), get()) }
     single<SpotsService> { SpotsServiceImpl(get()) }
-    single<UserService> { UserServiceImpl(get()) }
+    single<UserService> { UserServiceImpl(get(), get()) }
     single<SearchService> { SearchServiceImpl(get()) }
     single<CommentsService> { CommentsServiceImpl(get()) }
     single<LikesService> { LikesServiceImpl(get()) }
+    single<EmailService> { EmailServiceImpl() }
     // Repositories
     single<PicturesRepository> { PicturesRepositoryImpl(get()) }
     single<SpotsRepository> { SpotsRepositoryImpl(get()) }
