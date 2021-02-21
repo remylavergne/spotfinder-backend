@@ -72,16 +72,14 @@ dependencies {
     compile "org.koin:koin-ktor:$koin_version"
     testCompile "org.koin:koin-test:$koin_version"
 
-    // -----
+    // ----- Libs
     implementation 'org.litote.kmongo:kmongo:4.1.2'
     detekt "io.gitlab.arturbosch.detekt:detekt-cli:1.13.1"
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.13.1"
     compile 'io.micrometer:micrometer-registry-prometheus:1.5.5'
-    implementation 'id.zelory:compressor:3.0.0'
     implementation 'de.mkammerer:argon2-jvm:2.7'
-    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
-    compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.13'
-
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.13'
+    implementation group: 'org.simplejavamail', name: 'simple-java-mail', version: '6.4.5'
 
     // Unit tests
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"

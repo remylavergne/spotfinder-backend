@@ -16,6 +16,7 @@ val mainModule = module(createdAtStart = true) {
     single<SearchService> { SearchServiceImpl(get()) }
     single<CommentsService> { CommentsServiceImpl(get()) }
     single<LikesService> { LikesServiceImpl(get()) }
+    single<EmailService> { EmailServiceImpl() }
     // Repositories
     single<PicturesRepository> { PicturesRepositoryImpl(get()) }
     single<SpotsRepository> { SpotsRepositoryImpl(get()) }
