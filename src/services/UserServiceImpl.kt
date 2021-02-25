@@ -8,14 +8,13 @@ import dev.remylavergne.spotfinder.utils.MoshiHelper
 import dev.remylavergne.spotfinder.utils.PasswordTools
 import io.ktor.http.*
 import io.ktor.util.*
+import java.util.*
 
 @KtorExperimentalAPI
-class UserServiceImpl(private val userRepository: UserRepository) : UserService {
-    override fun logUserConnection(callParams: Parameters) {
-        callParams["id"]?.let { userId: String ->
-            userRepository.logUserConnection(userId)
-        } ?: throw Exception("Missing user id")
-    }
+class UserServiceImpl(
+    private val userRepository: UserRepository,
+    private val emailService: EmailService
+) : UserService {
 
     override fun retrieveAccount(credentials: RetrieveAccountDto): String? {
         val user: User? = userRepository.retrieveAccount(credentials)
@@ -33,9 +32,20 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
     override fun resetPassword(data: ResetPasswordDto): Boolean {
         val user: User = userRepository.accountFound(data) ?: return false
 
-        // TODO: Send email service
+        val urlToken = UUID.randomUUID().toString().replace("-", "")
+        val isTokenSaved = this.userRepository.saveUrlToken(user.id, urlToken)
+
+        if (!isTokenSaved) {
+            return false
+        }
+
+        this.emailService.sendLinkToResetPassword(user, urlToken)
 
         return true
+    }
+
+    override fun resetPasswordCheckToken(token: ResetPasswordTokenDto): Boolean {
+        return false
     }
 
     override fun getUser(id: String?, username: String?): String? {

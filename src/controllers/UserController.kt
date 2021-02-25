@@ -26,7 +26,7 @@ fun Route.usersController() {
                         contentType = ContentType.Text.Plain
                     )
                 } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
-            } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
+            }
         }
 
         post("/user/update-password") {
@@ -47,15 +47,6 @@ fun Route.usersController() {
                     )
                 }
             } ?: call.respond(HttpStatusCode.NotFound, "Unable to update user password")
-        }
-
-        post("/user/log/{id}") {
-            userService.logUserConnection(call.parameters)
-            call.respondText(
-                text = "User connection logs updated",
-                status = HttpStatusCode.OK,
-                contentType = ContentType.Text.Plain
-            )
         }
 
         post("/user/comments") { // TODO: Refactor comme pour les photos
