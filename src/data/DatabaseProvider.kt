@@ -66,8 +66,10 @@ object DatabaseProvider {
         spotCollection.ensureIndex(textIndexes)
         spotCollection.createIndex(Indexes.geo2dsphere("location"))
         // USERS
-        database.getCollection(SpotfinderCollections.USERS.value)
-            .createIndex(Indexes.text("username"))
+        val usersCollection = database.getCollection(SpotfinderCollections.USERS.value)
+        val usersTextIndexes = BasicDBObject()
+        usersTextIndexes["username"] = "text"
+        usersTextIndexes["email"] = "text"
+        usersCollection.ensureIndex(usersTextIndexes)
     }
-
 }
