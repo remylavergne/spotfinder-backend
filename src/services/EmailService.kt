@@ -4,4 +4,5 @@ import dev.remylavergne.spotfinder.data.models.User
 
 interface EmailService {
  fun resetPassword(user: User, url: String): Boolean
+ fun sendLinkToResetPassword(user: User, token: String)
 }
