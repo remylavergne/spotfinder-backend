@@ -17,6 +17,7 @@ object EmailManager {
     private lateinit var port: String
     private lateinit var email: String
     private lateinit var password: String
+    lateinit var resetBaseUrl: String
 
     @Throws(Exception::class)
     fun initialize(application: Application): EmailManager {
@@ -31,6 +32,7 @@ object EmailManager {
             "email.smtp.email"
         ).getString()
         this.password = application.environment.config.property("email.smtp.password").getString()
+        this.resetBaseUrl = application.environment.config.property("email.resetBaseUrl").getString()
 
         return this
     }

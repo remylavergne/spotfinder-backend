@@ -3,6 +3,7 @@ package dev.remylavergne.spotfinder.services
 import dev.remylavergne.spotfinder.data.EmailManager
 import dev.remylavergne.spotfinder.data.models.User
 import io.ktor.util.*
+import org.simplejavamail.api.internal.outlooksupport.model.EmailFromOutlookMessage
 
 @KtorExperimentalAPI
 class EmailServiceImpl : EmailService {
@@ -16,7 +17,7 @@ class EmailServiceImpl : EmailService {
         EmailManager.sendEmail(
             user,
             "Password reset for your account requested!",
-            "<a href=\"https://localhost:8080?token=$token\">Reset my password</a>"
+            "<a href=\"${EmailManager.resetBaseUrl}$token\">Reset my password</a>"
         )
     }
 }
