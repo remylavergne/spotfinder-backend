@@ -26,7 +26,7 @@ fun Route.usersController() {
                         contentType = ContentType.Text.Plain
                     )
                 } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
-            } ?: call.respond(HttpStatusCode.NotFound, "This user doesn't exist")
+            }
         }
 
         post("/user/update-password") {
@@ -47,15 +47,6 @@ fun Route.usersController() {
                     )
                 }
             } ?: call.respond(HttpStatusCode.NotFound, "Unable to update user password")
-        }
-
-        post("/user/log/{id}") {
-            userService.logUserConnection(call.parameters)
-            call.respondText(
-                text = "User connection logs updated",
-                status = HttpStatusCode.OK,
-                contentType = ContentType.Text.Plain
-            )
         }
 
         post("/user/comments") { // TODO: Refactor comme pour les photos
@@ -193,6 +184,26 @@ fun Route.usersController() {
     post("/user/reset-password") {
         call.getResponseObject<ResetPasswordDto>()?.let { data ->
             val success: Boolean = userService.resetPassword(data)
+
+            if (success) {
+                call.respondText(
+                    text = "User found. Email will be sent quickly",
+                    status = HttpStatusCode.OK,
+                    contentType = ContentType.Text.Plain
+                )
+            } else {
+                call.respondText(
+                    text = "User not found",
+                    status = HttpStatusCode.NotFound,
+                    contentType = ContentType.Text.Plain
+                )
+            }
+        } ?: call.respond(HttpStatusCode.BadRequest)
+    }
+
+    post("/user/reset-password-token-verification") {
+        call.getResponseObject<ResetPasswordTokenDto>()?.let { token ->
+            val success: Boolean = userService.resetPasswordCheckToken(token)
 
             if (success) {
                 call.respondText(

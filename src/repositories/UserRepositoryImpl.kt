@@ -6,9 +6,6 @@ import dev.remylavergne.spotfinder.data.models.*
 import dev.remylavergne.spotfinder.utils.PasswordTools
 
 class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepository {
-    override fun logUserConnection(userId: String) {
-        databaseHelper.logUserConnection(userId)
-    }
 
     override fun retrieveAccount(credentials: RetrieveAccountDto): User? {
         // Get relevant user
@@ -109,5 +106,9 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
 
     override fun accountFound(data: ResetPasswordDto): User? {
         return databaseHelper.getUserByEmail(data.email)
+    }
+
+    override fun saveUrlToken(userId: String, urlToken: String): Boolean {
+        return databaseHelper.saveResetPasswordToken(TokenEntity(userId, urlToken))
     }
 }

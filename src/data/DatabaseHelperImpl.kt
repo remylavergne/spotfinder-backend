@@ -168,31 +168,12 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
-    override fun logUserConnection(userId: String) {
-        /* val db = DatabaseProvider.database
-         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
-         // Get -> update
-         try {
-             collection.findOne(User::id eq userId)?.let { user: User ->
-                 collection.updateOne(User::id eq userId, setValue(User::lastConnexion, System.currentTimeMillis()))
-                 return
-             }
-         } catch (e: Exception) {
-             println(e)
-         }
-         // if not, create -> insert
-         val currentTime = System.currentTimeMillis()
-         val user = User(userId, currentTime, currentTime)
-         collection.insertOne(user)
-         */
-    }
-
     override fun isUsernameExist(username: String): Boolean {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
 
         return try {
-            val query = text(username)
+            val query = text(username) // TODO: Fix this -> Wrong result happens
             val user = collection.findOne(query)
             user != null
         } catch (e: Exception) {
@@ -204,7 +185,7 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
         return try {
-            val query = text(username)
+            val query = text(username) // TODO: Fix this -> Wrong result happens
             collection.findOne(query)
         } catch (e: Exception) {
             println(e)
@@ -227,8 +208,15 @@ class DatabaseHelperImpl : DatabaseHelper {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
         return try {
-            val query = text(email)
-            collection.findOne(query)
+            val emailQuery = text("\"$email\"")
+            val results = collection.find(emailQuery)
+                .filter { it.email?.toLowerCase().equals(email, true) }
+                .toList()
+            return if (results.isNotEmpty()) {
+                results.first()
+            } else {
+                null
+            }
         } catch (e: Exception) {
             println(e)
             null
@@ -243,6 +231,18 @@ class DatabaseHelperImpl : DatabaseHelper {
                 collection.updateOne(User::id eq user.id, setValue(User::password, newPasswordHash))
                 true
             } ?: false
+        } catch (e: Exception) {
+            println(e)
+            false
+        }
+    }
+
+    override fun saveResetPasswordToken(tokenEntity: TokenEntity): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<TokenEntity>(SpotfinderCollections.URL_TOKENS.value)
+        return try {
+            collection.insertOne(tokenEntity)
+            true
         } catch (e: Exception) {
             println(e)
             false
