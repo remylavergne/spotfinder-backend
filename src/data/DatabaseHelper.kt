@@ -1,8 +1,6 @@
 package dev.remylavergne.spotfinder.data
 
 import com.mongodb.client.model.geojson.Position
-import dev.remylavergne.spotfinder.controllers.dto.CreateCommentDto
-import dev.remylavergne.spotfinder.controllers.dto.UpdatePasswordDto
 import dev.remylavergne.spotfinder.data.models.*
 
 interface DatabaseHelper {
@@ -54,7 +52,6 @@ interface DatabaseHelper {
     fun getPicturesCount(): Long
 
     // Users
-    fun logUserConnection(userId: String)
     fun isUsernameExist(username: String): Boolean
     fun getUserByUsername(username: String): User?
     fun getUserById(id: String): User?
