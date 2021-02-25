@@ -62,6 +62,7 @@ interface DatabaseHelper {
     fun getPendingSpots(id: String, page: Int, limit: Int): List<Spot>
     fun getPendingUserPictures(id: String, page: Int, limit: Int): List<Picture>
     fun updatePassword(userId: String, newPasswordHash: String): Boolean
+    fun saveResetPasswordToken(tokenEntity: TokenEntity): Boolean
     // User Statistics
     fun getUserSpotsCount(userId: String): Int
     fun getUserPicturesCount(userId: String): Int

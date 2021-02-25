@@ -200,4 +200,24 @@ fun Route.usersController() {
             }
         } ?: call.respond(HttpStatusCode.BadRequest)
     }
+
+    post("/user/reset-password-token-verification") {
+        call.getResponseObject<ResetPasswordTokenDto>()?.let { token ->
+            val success: Boolean = userService.resetPasswordCheckToken(token)
+
+            if (success) {
+                call.respondText(
+                    text = "User found. Email will be sent quickly",
+                    status = HttpStatusCode.OK,
+                    contentType = ContentType.Text.Plain
+                )
+            } else {
+                call.respondText(
+                    text = "User not found",
+                    status = HttpStatusCode.NotFound,
+                    contentType = ContentType.Text.Plain
+                )
+            }
+        } ?: call.respond(HttpStatusCode.BadRequest)
+    }
 }

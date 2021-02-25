@@ -107,4 +107,8 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
     override fun accountFound(data: ResetPasswordDto): User? {
         return databaseHelper.getUserByEmail(data.email)
     }
+
+    override fun saveUrlToken(userId: String, urlToken: String): Boolean {
+        return databaseHelper.saveResetPasswordToken(TokenEntity(userId, urlToken))
+    }
 }

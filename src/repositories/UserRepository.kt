@@ -4,7 +4,6 @@ import dev.remylavergne.spotfinder.controllers.dto.*
 import dev.remylavergne.spotfinder.data.models.*
 
 interface UserRepository {
-    fun logUserConnection(userId: String)
     fun getUser(id: String?, username: String?): User?
     fun insertUser(newUser: User): Boolean
     fun retrieveAccount(credentials: RetrieveAccountDto): User?
@@ -18,4 +17,5 @@ interface UserRepository {
     fun getUserStatistics(data: SearchWithPaginationDto): UserStatistics
     fun updatePassword(data: UpdatePasswordDto): Boolean
     fun accountFound(data: ResetPasswordDto): User?
+    fun saveUrlToken(userId: String, urlToken: String): Boolean
 }

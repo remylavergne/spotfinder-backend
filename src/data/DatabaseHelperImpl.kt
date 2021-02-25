@@ -237,6 +237,18 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun saveResetPasswordToken(tokenEntity: TokenEntity): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<TokenEntity>(SpotfinderCollections.URL_TOKENS.value)
+        return try {
+            collection.insertOne(tokenEntity)
+            true
+        } catch (e: Exception) {
+            println(e)
+            false
+        }
+    }
+
     override fun createUser(user: User): Boolean {
         val db = DatabaseProvider.database
         val collection = db.getCollection<User>(SpotfinderCollections.USERS.value)
