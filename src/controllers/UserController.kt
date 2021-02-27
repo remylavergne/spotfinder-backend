@@ -207,13 +207,13 @@ fun Route.usersController() {
 
             if (success) {
                 call.respondText(
-                    text = "User found. Email will be sent quickly",
+                    text = success.toString(),
                     status = HttpStatusCode.OK,
                     contentType = ContentType.Text.Plain
                 )
             } else {
                 call.respondText(
-                    text = "User not found",
+                    text = success.toString(),
                     status = HttpStatusCode.NotFound,
                     contentType = ContentType.Text.Plain
                 )

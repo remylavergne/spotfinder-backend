@@ -63,6 +63,7 @@ interface DatabaseHelper {
     fun getPendingUserPictures(id: String, page: Int, limit: Int): List<Picture>
     fun updatePassword(userId: String, newPasswordHash: String): Boolean
     fun saveResetPasswordToken(tokenEntity: TokenEntity): Boolean
+    fun getUrlToken(token: String): TokenEntity?
     // User Statistics
     fun getUserSpotsCount(userId: String): Int
     fun getUserPicturesCount(userId: String): Int

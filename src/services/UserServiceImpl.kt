@@ -1,6 +1,7 @@
 package dev.remylavergne.spotfinder.services
 
 import dev.remylavergne.spotfinder.controllers.dto.*
+import dev.remylavergne.spotfinder.data.EmailManager
 import dev.remylavergne.spotfinder.data.JWTTool
 import dev.remylavergne.spotfinder.data.models.*
 import dev.remylavergne.spotfinder.repositories.UserRepository
@@ -45,7 +46,9 @@ class UserServiceImpl(
     }
 
     override fun resetPasswordCheckToken(token: ResetPasswordTokenDto): Boolean {
-        return false
+        val tokenEntity: TokenEntity? = userRepository.getUrlToken(token.token)
+
+        return EmailManager.isUrlTokenStillValid(tokenEntity)
     }
 
     override fun getUser(id: String?, username: String?): String? {

@@ -32,6 +32,18 @@ fun Application.loadModules() {
         modules(mainModule, toolsModule)
     }
 
+    install(CORS) {
+        method(HttpMethod.Options)
+        header(HttpHeaders.Origin)
+        header(HttpHeaders.AccessControlAllowOrigin)
+        anyHost()
+        // allowCredentials = true
+        allowSameOrigin = true
+        allowCredentials = true
+        allowNonSimpleContentTypes = true
+        maxAgeInSeconds = 3600
+    }
+
     install(Compression) {
         gzip {
             priority = 1.0
@@ -60,7 +72,7 @@ fun Application.loadModules() {
     }
 
     install(Authentication) {
-           jwt {
+        jwt {
             realm = JWTTool.jwtRealm
             verifier(JWTTool.makeJwtVerifier(JWTTool.jwtIssuer, JWTTool.jwtAudience))
             validate { credential ->
