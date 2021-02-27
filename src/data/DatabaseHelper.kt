@@ -64,6 +64,7 @@ interface DatabaseHelper {
     fun updatePassword(userId: String, newPasswordHash: String): Boolean
     fun saveResetPasswordToken(tokenEntity: TokenEntity): Boolean
     fun getUrlToken(token: String): TokenEntity?
+    fun deleteUrlToken(token: String): Boolean
     // User Statistics
     fun getUserSpotsCount(userId: String): Int
     fun getUserPicturesCount(userId: String): Int

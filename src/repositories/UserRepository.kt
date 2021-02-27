@@ -16,7 +16,8 @@ interface UserRepository {
     fun getPendingPictures(data: SearchWithPaginationDto): List<Picture>
     fun getUserStatistics(data: SearchWithPaginationDto): UserStatistics
     fun updatePassword(data: UpdatePasswordDto): Boolean
-    fun accountFound(data: ResetPasswordDto): User?
+    fun accountFound(data: ResetPasswordRequestDto): User?
     fun saveUrlToken(userId: String, urlToken: String): Boolean
     fun getUrlToken(token: String): TokenEntity?
+    fun resetUserPassword(tokenEntity: TokenEntity, newPassword: String): Boolean
 }

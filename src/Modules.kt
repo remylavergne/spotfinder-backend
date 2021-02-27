@@ -41,7 +41,7 @@ fun Application.loadModules() {
         allowSameOrigin = true
         allowCredentials = true
         allowNonSimpleContentTypes = true
-        maxAgeInSeconds = 3600
+        maxAgeInSeconds = 3600 * 24
     }
 
     install(Compression) {

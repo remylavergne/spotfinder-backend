@@ -30,7 +30,7 @@ class UserServiceImpl(
         }
     }
 
-    override fun resetPassword(data: ResetPasswordDto): Boolean {
+    override fun resetPasswordRequest(data: ResetPasswordRequestDto): Boolean {
         val user: User = userRepository.accountFound(data) ?: return false
 
         val urlToken = UUID.randomUUID().toString().replace("-", "")
@@ -49,6 +49,15 @@ class UserServiceImpl(
         val tokenEntity: TokenEntity? = userRepository.getUrlToken(token.token)
 
         return EmailManager.isUrlTokenStillValid(tokenEntity)
+    }
+
+    override fun resetUserPassword(resetPasswordData: ResetPasswordDto): Boolean {
+        val tokenEntity: TokenEntity = userRepository.getUrlToken(resetPasswordData.urlToken) ?: return false
+        if (!EmailManager.isUrlTokenStillValid(tokenEntity)) {
+            return false
+        }
+
+        return userRepository.resetUserPassword(tokenEntity, resetPasswordData.password)
     }
 
     override fun getUser(id: String?, username: String?): String? {
