@@ -522,6 +522,18 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun getUrlToken(token: String): TokenEntity? {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<TokenEntity>(SpotfinderCollections.URL_TOKENS.value)
+        return try {
+            collection
+                .findOne(TokenEntity::token eq token)
+        } catch (e: Exception) {
+            println(e)
+            null
+        }
+    }
+
     /**
      * Likes
      */

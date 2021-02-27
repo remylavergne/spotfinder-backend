@@ -67,6 +67,10 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
         databaseHelper.updateToken(userId, token)
     }
 
+    override fun getUrlToken(token: String): TokenEntity? {
+        return databaseHelper.getUrlToken(token)
+    }
+
     override fun getUserStatistics(data: SearchWithPaginationDto): UserStatistics {
         val spotsCount: Int = databaseHelper.getUserSpotsCount(data.id)
         val picturesCount: Int = databaseHelper.getUserPicturesCount(data.id)

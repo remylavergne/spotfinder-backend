@@ -18,4 +18,5 @@ interface UserRepository {
     fun updatePassword(data: UpdatePasswordDto): Boolean
     fun accountFound(data: ResetPasswordDto): User?
     fun saveUrlToken(userId: String, urlToken: String): Boolean
+    fun getUrlToken(token: String): TokenEntity?
 }
