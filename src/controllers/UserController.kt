@@ -181,9 +181,9 @@ fun Route.usersController() {
         } ?: call.respond(HttpStatusCode.BadRequest)
     }
 
-    post("/user/reset-password") {
-        call.getResponseObject<ResetPasswordDto>()?.let { data ->
-            val success: Boolean = userService.resetPassword(data)
+    post("/user/reset-password-request") {
+        call.getResponseObject<ResetPasswordRequestDto>()?.let { data ->
+            val success: Boolean = userService.resetPasswordRequest(data)
 
             if (success) {
                 call.respondText(
@@ -219,5 +219,25 @@ fun Route.usersController() {
                 )
             }
         } ?: call.respond(HttpStatusCode.BadRequest)
+    }
+
+    post("/user/reset-password") {
+        val resetPasswordData: ResetPasswordDto = call.getResponseObject<ResetPasswordDto>() ?: return@post
+
+        val success: Boolean = userService.resetUserPassword(resetPasswordData)
+
+        if (success) {
+            call.respondText(
+                text = success.toString(),
+                status = HttpStatusCode.OK,
+                contentType = ContentType.Text.Plain
+            )
+        } else {
+            call.respondText(
+                text = success.toString(),
+                status = HttpStatusCode.NotFound,
+                contentType = ContentType.Text.Plain
+            )
+        }
     }
 }

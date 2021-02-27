@@ -534,6 +534,18 @@ class DatabaseHelperImpl : DatabaseHelper {
         }
     }
 
+    override fun deleteUrlToken(token: String): Boolean {
+        val db = DatabaseProvider.database
+        val collection = db.getCollection<TokenEntity>(SpotfinderCollections.URL_TOKENS.value)
+        return try {
+            collection.deleteOne(TokenEntity::token eq token)
+            true
+        } catch (e: Exception) {
+            println(e)
+            false
+        }
+    }
+
     /**
      * Likes
      */

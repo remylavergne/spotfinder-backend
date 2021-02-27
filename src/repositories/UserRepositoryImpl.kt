@@ -101,14 +101,21 @@ class UserRepositoryImpl(private val databaseHelper: DatabaseHelper) : UserRepos
                 }
             }
 
-            // if match -> update it
-
-
             return true
         } ?: false
     }
 
-    override fun accountFound(data: ResetPasswordDto): User? {
+    override fun resetUserPassword(tokenEntity: TokenEntity, newPassword: String): Boolean {
+        val newPasswordHash: String = PasswordTools.generateHash(newPassword) ?: return false
+        val passwordUpdated: Boolean = databaseHelper.updatePassword(tokenEntity.userId, newPasswordHash)
+        return if (passwordUpdated) {
+            databaseHelper.deleteUrlToken(tokenEntity.token)
+        } else {
+            false
+        }
+    }
+
+    override fun accountFound(data: ResetPasswordRequestDto): User? {
         return databaseHelper.getUserByEmail(data.email)
     }
 
